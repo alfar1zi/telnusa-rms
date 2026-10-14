@@ -1,0 +1,265 @@
+@import "tailwindcss";
+
+/* One family only: Inter, self-hosted from /public/fonts under the SIL OFL
+   (see LICENSE-Inter-OFL.txt). No webfont is fetched at runtime.
+   There is deliberately NO second family: no serif for headings and no
+   monospace for identifiers, serials or numeric columns. Headings differ by
+   weight and size, numbers align with tabular figures, and the `--font-serif`
+   / `--font-mono` tokens are aliases of the sans so a stray utility class can
+   never pull in another typeface. */
+@font-face {
+  font-family: "Inter";
+  src: url("/fonts/Inter-Variable-latin.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-card: var(--card);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-radius: var(--radius);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-popover: var(--popover);
+  --color-primary: var(--primary);
+  --color-sidebar: var(--sidebar);
+  --color-spacing: var(--spacing);
+  --color-font-mono: var(--font-mono);
+  --color-font-sans: var(--font-sans);
+  --color-font-serif: var(--font-serif);
+  --color-secondary: var(--secondary);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-destructive: var(--destructive);
+  --color-shadow-blur: var(--shadow-blur);
+  --color-shadow-color: var(--shadow-color);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-shadow-spread: var(--shadow-spread);
+  --color-letter-spacing: var(--letter-spacing);
+  --color-shadow-opacity: var(--shadow-opacity);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-card-foreground: var(--card-foreground);
+  --color-shadow-offset-x: var(--shadow-offset-x);
+  --color-shadow-offset-y: var(--shadow-offset-y);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --card: #F4EFE4;
+  --ring: #2E2E2E;
+  --input: #D2CBBB;
+  --muted: #CFC8B8;
+  --accent: #E6E4D7;
+  --border: #D2CBBB;
+  --radius: 0.5rem;
+  --chart-1: #B23A1A;
+  --chart-2: #1E1E1E;
+  --chart-3: #5E5A52;
+  --chart-4: #8A8274;
+  --popover: #F4EFE4;
+  --primary: #2E2E2E;
+  --sidebar: #E3DDCF;
+  --spacing: 0.25rem;
+  --font-sans: "Inter", sans-serif;
+  /* Inter is the only family; both aliases exist so a stray `font-serif` or
+     `font-mono` resolves to Inter instead of a system fallback. */
+  --font-serif: var(--font-sans);
+  --font-mono: var(--font-sans);
+  --secondary: #D8D2C4;
+  --background: #E9E4D8;
+  --foreground: #1E1E1E;
+  --destructive: #B91C1C;
+  --shadow-blur: 10px;
+  --shadow-color: #000000;
+  --sidebar-ring: #2E2E2E;
+  --shadow-spread: 0px;
+  --letter-spacing: 0.01em;
+  --shadow-opacity: 0.1;
+  --sidebar-accent: #E6E4D7;
+  --sidebar-border: #D2CBBB;
+  --card-foreground: #1E1E1E;
+  --shadow-offset-x: 0px;
+  --shadow-offset-y: 4px;
+  --sidebar-primary: #2E2E2E;
+  --muted-foreground: #5E5A52;
+  --accent-foreground: #2E2E2E;
+  --popover-foreground: #1E1E1E;
+  --primary-foreground: #E6E4D7;
+  --sidebar-foreground: #1E1E1E;
+  --secondary-foreground: #2E2E2E;
+  --destructive-foreground: #FFFFFF;
+  --sidebar-accent-foreground: #2E2E2E;
+  --sidebar-primary-foreground: #E6E4D7;
+
+  /* Operational status mapped strictly to Zen Linen theme tokens */
+  --status-online:       #17703A;
+  --status-all_ok:       #17703A;
+  --status-degraded:     var(--chart-1);
+  --status-partial:      var(--chart-1);
+  --status-stale:        var(--chart-1);
+  --status-clock_skew:   var(--chart-1);
+  --status-sensor_fault: var(--destructive);
+  --status-offline:      var(--destructive);
+  --status-unknown:      var(--muted-foreground);
+  --status-no_data:      var(--muted-foreground);
+  --status-not_integrated: var(--muted-foreground);
+  --status-critical:     var(--destructive);
+
+  --severity-disaster: var(--destructive);
+  --severity-high:     var(--destructive);
+  --severity-average:  var(--chart-1);
+  --severity-warning:  var(--chart-1);
+  --severity-info:     var(--muted-foreground);
+}
+
+.dark {
+  --card: #1C1C1C;
+  --ring: #D1CFC0;
+  --input: #2C2C2C;
+  --muted: #2A2A2A;
+  --accent: #363636;
+  --border: #2C2C2C;
+  --radius: 0.5rem;
+  --chart-1: #F26A4B;
+  --chart-2: #D9CFC2;
+  --chart-3: #8E8A83;
+  --chart-4: #A79F92;
+  --popover: #1C1C1C;
+  --primary: #D1CFC0;
+  --sidebar: #101010;
+  --spacing: 0.25rem;
+  --font-sans: "Inter", sans-serif;
+  /* Inter is the only family; both aliases exist so a stray `font-serif` or
+     `font-mono` resolves to Inter instead of a system fallback. */
+  --font-serif: var(--font-sans);
+  --font-mono: var(--font-sans);
+  --secondary: #222222;
+  --background: #141414;
+  --foreground: #E8E3DA;
+  --destructive: #EF4444;
+  --shadow-blur: 15px;
+  --shadow-color: #000000;
+  --sidebar-ring: #D1CFC0;
+  --shadow-spread: 0px;
+  --letter-spacing: 0.01em;
+  --shadow-opacity: 0.3;
+  --sidebar-accent: #363636;
+  --sidebar-border: #2C2C2C;
+  --card-foreground: #E8E3DA;
+  --shadow-offset-x: 0px;
+  --shadow-offset-y: 6px;
+  --sidebar-primary: #D1CFC0;
+  --muted-foreground: #8E8A83;
+  --accent-foreground: #D1CFC0;
+  --popover-foreground: #E8E3DA;
+  --primary-foreground: #363636;
+  --sidebar-foreground: #E8E3DA;
+  --secondary-foreground: #D1CFC0;
+  --destructive-foreground: #FFFFFF;
+  --sidebar-accent-foreground: #D1CFC0;
+  --sidebar-primary-foreground: #363636;
+
+  --status-online:       #4ADE80;
+  --status-all_ok:       #4ADE80;
+  --status-degraded:     var(--chart-1);
+  --status-partial:      var(--chart-1);
+  --status-stale:        var(--chart-1);
+  --status-clock_skew:   var(--chart-1);
+  --status-sensor_fault: var(--destructive);
+  --status-offline:      var(--destructive);
+  --status-unknown:      var(--muted-foreground);
+  --status-no_data:      var(--muted-foreground);
+  --status-not_integrated: var(--muted-foreground);
+  --status-critical:     var(--destructive);
+
+  --severity-disaster: var(--destructive);
+  --severity-high:     var(--destructive);
+  --severity-average:  var(--chart-1);
+  --severity-warning:  var(--chart-1);
+  --severity-info:     var(--muted-foreground);
+}
+
+* {
+  border-color: var(--border);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Numeric values: tabular figures */
+[data-tabnum] {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Motion: honour the user's system preference (WCAG 2.3.3). Transitions are decorative
+   feedback here; none of them carries information that is lost when they are removed. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* Printing a report: the console chrome is noise on paper, and the charts and
+   table are the whole point of the page. Browsers offer "Save as PDF" here, which
+   is the PDF path: no second renderer, no second copy of the data to keep in step. */
+@media print {
+  header,
+  aside,
+  [data-slot="sidebar"],
+  [data-sidebar="sidebar"] {
+    display: none !important;
+  }
+  main,
+  [role="main"] {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+  }
+  .shadow-xs,
+  .shadow-sm,
+  .rounded-lg,
+  .rounded-xl {
+    box-shadow: none !important;
+  }
+  canvas {
+    max-width: 100% !important;
+  }
+  .max-h-\[560px\],
+  .max-h-\[500px\] {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+}
