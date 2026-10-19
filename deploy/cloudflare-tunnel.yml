@@ -1,0 +1,37 @@
+# [HISTORICAL / REFERENCE CONFIGURATION - NON-PRODUCTION]
+# TELNUSA NMS - Reference Cloudflare Tunnel configuration
+# Exposes the Apache vhost publicly via Cloudflare Zero Trust tunnel.
+# The backend API (127.0.0.1:8080) is NOT directly tunneled  - 
+# all traffic goes through Apache which proxies /api/* to the backend.
+#
+# Prerequisites:
+#   cloudflared login
+#   cloudflared tunnel create telnusa-nms
+#   cloudflared tunnel route dns telnusa-nms nms.telnusa.id
+#
+# Run:
+#   cloudflared tunnel --config deploy/cloudflare-tunnel.yml run
+#
+# Or as a systemd service:
+#   cloudflared service install
+#   systemctl enable --now cloudflared
+
+tunnel: <TUNNEL_ID>              # replace with: cloudflared tunnel list
+credentials-file: /etc/cloudflared/telnusa-nms.json
+
+ingress:
+  # Terminate TLS at Cloudflare; forward to local Apache on port 80
+  - hostname: nms.telnusa.id     # replace with your actual Cloudflare zone hostname
+    service: http://127.0.0.1:80
+    originRequest:
+      # SSE requires long-lived connections; increase timeout
+      connectTimeout: 10s
+      tlsTimeout:     10s
+      tcpKeepAlive:   30s
+      noHappyEyeballs: false
+      keepAliveTimeout: 90s
+      keepAliveConnections: 10
+      httpHostHeader: nms.example.test
+
+  # Catch-all required by cloudflared
+  - service: http_status:404
