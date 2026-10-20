@@ -1,0 +1,1028 @@
+{
+ "annotations": {
+  "list": [
+   {
+    "builtIn": 1,
+    "datasource": {
+     "type": "grafana",
+     "uid": "-- Grafana --"
+    },
+    "enable": true,
+    "hide": true,
+    "name": "Annotations & Alerts",
+    "type": "dashboard"
+   }
+  ]
+ },
+ "editable": true,
+ "fiscalYearStartMonth": 0,
+ "graphTooltip": 1,
+ "id": null,
+ "links": [],
+ "panels": [
+  {
+   "collapsed": false,
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 0
+   },
+   "id": 100,
+   "title": "MPPT DC Solar Power Conversion",
+   "type": "row"
+  },
+  {
+   "datasource": {
+    "type": "alexanderzobnin-zabbix-datasource",
+    "uid": "telnusa-zabbix"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "drawStyle": "line",
+      "lineInterpolation": "linear",
+      "lineWidth": 1.5,
+      "pointSize": 5,
+      "showPoints": "auto",
+      "spanNulls": false
+     },
+     "unit": "volt"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 0,
+    "y": 1
+   },
+   "id": 1,
+   "options": {
+    "legend": {
+     "calcs": [
+      "lastNotNull",
+      "max",
+      "min"
+     ],
+     "displayMode": "table",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "none"
+    }
+   },
+   "targets": [
+    {
+     "application": {
+      "filter": ""
+     },
+     "datasource": {
+      "type": "alexanderzobnin-zabbix-datasource",
+      "uid": "telnusa-zabbix"
+     },
+     "functions": [],
+     "group": {
+      "filter": "TELNUSA NMS"
+     },
+     "host": {
+      "filter": "$device"
+     },
+     "item": {
+      "filter": "/rut\\.mppt\\.pv\\.v|rut\\.mppt\\.out\\.v|.*PV.*voltage|.*output.*voltage/"
+     },
+     "options": {
+      "showDisabledItems": false,
+      "skipEmptyValues": false
+     },
+     "queryType": "Metrics",
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "MPPT Voltages (PV Array vs DC Output)",
+   "type": "timeseries"
+  },
+  {
+   "datasource": {
+    "type": "alexanderzobnin-zabbix-datasource",
+    "uid": "telnusa-zabbix"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "drawStyle": "line",
+      "lineInterpolation": "linear",
+      "lineWidth": 1.5,
+      "pointSize": 5,
+      "showPoints": "auto",
+      "spanNulls": false
+     },
+     "unit": "amp"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 12,
+    "y": 1
+   },
+   "id": 2,
+   "options": {
+    "legend": {
+     "calcs": [
+      "lastNotNull",
+      "max",
+      "min"
+     ],
+     "displayMode": "table",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "none"
+    }
+   },
+   "targets": [
+    {
+     "application": {
+      "filter": ""
+     },
+     "datasource": {
+      "type": "alexanderzobnin-zabbix-datasource",
+      "uid": "telnusa-zabbix"
+     },
+     "functions": [],
+     "group": {
+      "filter": "TELNUSA NMS"
+     },
+     "host": {
+      "filter": "$device"
+     },
+     "item": {
+      "filter": "/rut\\.mppt\\.pv\\.a|rut\\.mppt\\.out\\.a|.*PV.*current|.*output.*current/"
+     },
+     "options": {
+      "showDisabledItems": false,
+      "skipEmptyValues": false
+     },
+     "queryType": "Metrics",
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "MPPT Currents (PV Array vs Charging Output)",
+   "type": "timeseries"
+  },
+  {
+   "collapsed": false,
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 9
+   },
+   "id": 101,
+   "title": "PZEM AC 3-Phase Grid Telemetry",
+   "type": "row"
+  },
+  {
+   "datasource": {
+    "type": "alexanderzobnin-zabbix-datasource",
+    "uid": "telnusa-zabbix"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "drawStyle": "line",
+      "lineInterpolation": "linear",
+      "lineWidth": 1.5,
+      "pointSize": 5,
+      "showPoints": "auto",
+      "spanNulls": false
+     },
+     "unit": "volt"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 0,
+    "y": 10
+   },
+   "id": 3,
+   "options": {
+    "legend": {
+     "calcs": [
+      "lastNotNull",
+      "mean",
+      "max",
+      "min"
+     ],
+     "displayMode": "table",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "none"
+    }
+   },
+   "targets": [
+    {
+     "application": {
+      "filter": ""
+     },
+     "datasource": {
+      "type": "alexanderzobnin-zabbix-datasource",
+      "uid": "telnusa-zabbix"
+     },
+     "functions": [],
+     "group": {
+      "filter": "TELNUSA NMS"
+     },
+     "host": {
+      "filter": "$device"
+     },
+     "item": {
+      "filter": "/rut\\.pzem\\.[abc]\\.voltage|.*phase.*voltage/"
+     },
+     "options": {
+      "showDisabledItems": false,
+      "skipEmptyValues": false
+     },
+     "queryType": "Metrics",
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "AC 3-Phase Voltages (Phase A, B, C)",
+   "type": "timeseries"
+  },
+  {
+   "datasource": {
+    "type": "alexanderzobnin-zabbix-datasource",
+    "uid": "telnusa-zabbix"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "drawStyle": "line",
+      "lineInterpolation": "linear",
+      "lineWidth": 1.5,
+      "pointSize": 5,
+      "showPoints": "auto",
+      "spanNulls": false
+     },
+     "unit": "amp"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 12,
+    "y": 10
+   },
+   "id": 4,
+   "options": {
+    "legend": {
+     "calcs": [
+      "lastNotNull",
+      "mean",
+      "max",
+      "min"
+     ],
+     "displayMode": "table",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "none"
+    }
+   },
+   "targets": [
+    {
+     "application": {
+      "filter": ""
+     },
+     "datasource": {
+      "type": "alexanderzobnin-zabbix-datasource",
+      "uid": "telnusa-zabbix"
+     },
+     "functions": [],
+     "group": {
+      "filter": "TELNUSA NMS"
+     },
+     "host": {
+      "filter": "$device"
+     },
+     "item": {
+      "filter": "/rut\\.pzem\\.[abc]\\.current|.*phase.*current/"
+     },
+     "options": {
+      "showDisabledItems": false,
+      "skipEmptyValues": false
+     },
+     "queryType": "Metrics",
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "type": "timeseries",
+   "title": "AC 3-Phase Currents (Phase A, B, C)"
+  },
+  {
+   "collapsed": false,
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 18
+   },
+   "id": 102,
+   "title": "Accumulated Energy & Site Context",
+   "type": "row"
+  },
+  {
+   "datasource": {
+    "type": "alexanderzobnin-zabbix-datasource",
+    "uid": "telnusa-zabbix"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "drawStyle": "line",
+      "fillOpacity": 15,
+      "lineInterpolation": "linear",
+      "lineWidth": 2,
+      "pointSize": 5,
+      "showPoints": "auto",
+      "spanNulls": false
+     },
+     "unit": "kwh"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 7,
+    "w": 16,
+    "x": 0,
+    "y": 19
+   },
+   "id": 5,
+   "options": {
+    "legend": {
+     "calcs": [
+      "lastNotNull",
+      "max",
+      "min"
+     ],
+     "displayMode": "table",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "single",
+     "sort": "none"
+    }
+   },
+   "targets": [
+    {
+     "application": {
+      "filter": ""
+     },
+     "datasource": {
+      "type": "alexanderzobnin-zabbix-datasource",
+      "uid": "telnusa-zabbix"
+     },
+     "functions": [],
+     "group": {
+      "filter": "TELNUSA NMS"
+     },
+     "host": {
+      "filter": "$device"
+     },
+     "item": {
+      "filter": "/rut\\.pzem\\.energy\\.kwh|.*energy/"
+     },
+     "options": {
+      "showDisabledItems": false,
+      "skipEmptyValues": false
+     },
+     "queryType": "Metrics",
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "type": "timeseries",
+   "title": "Accumulated Energy (kWh)"
+  },
+  {
+   "datasource": {
+    "type": "datasource",
+    "uid": "grafana"
+   },
+   "gridPos": {
+    "h": 7,
+    "w": 8,
+    "x": 16,
+    "y": 19
+   },
+   "id": 6,
+   "options": {
+    "content": "### Sensor #3: Solar Irradiance\n\n**Honde RD-PSR-01** (RS485 Modbus RTU, slave 3, FC03, register 0, 1 x UInt16, 1:1 W/m²) is **integrated** as of 2026-10-20 after field verification.\n\n- Acquisition: RutOS `modbus_client` polls it every 20 s into `/var/run/modbus_client/modbus.db`\n- Transport: direct HTTPS telemetry (`/api/telemetry/ingest`) is the primary path\n- History: Zabbix trapper item `rut.solar.radiation`, unit W/m²\n- No synthetic or interpolated values are ever written\n",
+    "mode": "markdown"
+   },
+   "title": "Operational Governance",
+   "type": "text"
+  },
+  {
+   "collapsed": false,
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 26
+   },
+   "id": 103,
+   "title": "Sensor 3: Solar Irradiance (Honde RD-PSR-01)",
+   "type": "row"
+  },
+  {
+   "datasource": {
+    "type": "alexanderzobnin-zabbix-datasource",
+    "uid": "telnusa-zabbix"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "drawStyle": "line",
+      "lineInterpolation": "linear",
+      "lineWidth": 1.5,
+      "pointSize": 3,
+      "showPoints": "auto",
+      "spanNulls": false
+     },
+     "min": 0,
+     "unit": "custom:W/m²"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 8,
+    "w": 24,
+    "x": 0,
+    "y": 27
+   },
+   "id": 7,
+   "options": {
+    "legend": {
+     "calcs": [
+      "lastNotNull",
+      "max",
+      "min"
+     ],
+     "displayMode": "table",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "none"
+    }
+   },
+   "targets": [
+    {
+     "application": {
+      "filter": ""
+     },
+     "datasource": {
+      "type": "alexanderzobnin-zabbix-datasource",
+      "uid": "telnusa-zabbix"
+     },
+     "functions": [],
+     "group": {
+      "filter": "TELNUSA NMS"
+     },
+     "host": {
+      "filter": "$device"
+     },
+     "item": {
+      "filter": "/rut\\.solar\\.radiation/"
+     },
+     "options": {
+      "showDisabledItems": false,
+      "skipEmptyValues": false
+     },
+     "queryType": "Metrics",
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Solar Irradiance (W/m²)",
+   "type": "timeseries"
+  },
+  {
+   "collapsed": false,
+   "gridPos": {
+    "h": 1,
+    "w": 24,
+    "x": 0,
+    "y": 35
+   },
+   "id": 104,
+   "title": "Router Health (RUT906 system + modem)",
+   "type": "row"
+  },
+  {
+   "datasource": {
+    "type": "alexanderzobnin-zabbix-datasource",
+    "uid": "telnusa-zabbix"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "drawStyle": "line",
+      "lineInterpolation": "linear",
+      "lineWidth": 1.5,
+      "pointSize": 3,
+      "showPoints": "auto",
+      "spanNulls": false
+     },
+     "unit": "short"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 0,
+    "y": 36
+   },
+   "id": 8,
+   "options": {
+    "legend": {
+     "calcs": [
+      "lastNotNull",
+      "max",
+      "min"
+     ],
+     "displayMode": "table",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "none"
+    }
+   },
+   "targets": [
+    {
+     "application": {
+      "filter": ""
+     },
+     "datasource": {
+      "type": "alexanderzobnin-zabbix-datasource",
+      "uid": "telnusa-zabbix"
+     },
+     "functions": [],
+     "group": {
+      "filter": "TELNUSA NMS"
+     },
+     "host": {
+      "filter": "$device"
+     },
+     "item": {
+      "filter": "/rut\\.sys\\.load1/"
+     },
+     "options": {
+      "showDisabledItems": false,
+      "skipEmptyValues": false
+     },
+     "queryType": "Metrics",
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "CPU Load Average",
+   "type": "timeseries"
+  },
+  {
+   "datasource": {
+    "type": "alexanderzobnin-zabbix-datasource",
+    "uid": "telnusa-zabbix"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "drawStyle": "line",
+      "lineInterpolation": "linear",
+      "lineWidth": 1.5,
+      "pointSize": 3,
+      "showPoints": "auto",
+      "spanNulls": false
+     },
+     "unit": "percent"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 8,
+    "w": 12,
+    "x": 12,
+    "y": 36
+   },
+   "id": 9,
+   "options": {
+    "legend": {
+     "calcs": [
+      "lastNotNull",
+      "max",
+      "min"
+     ],
+     "displayMode": "table",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "none"
+    }
+   },
+   "targets": [
+    {
+     "application": {
+      "filter": ""
+     },
+     "datasource": {
+      "type": "alexanderzobnin-zabbix-datasource",
+      "uid": "telnusa-zabbix"
+     },
+     "functions": [],
+     "group": {
+      "filter": "TELNUSA NMS"
+     },
+     "host": {
+      "filter": "$device"
+     },
+     "item": {
+      "filter": "/rut\\.sys\\.ram\\.pct/"
+     },
+     "options": {
+      "showDisabledItems": false,
+      "skipEmptyValues": false
+     },
+     "queryType": "Metrics",
+     "refId": "A",
+     "resultFormat": "time_series"
+    },
+    {
+     "application": {
+      "filter": ""
+     },
+     "datasource": {
+      "type": "alexanderzobnin-zabbix-datasource",
+      "uid": "telnusa-zabbix"
+     },
+     "functions": [],
+     "group": {
+      "filter": "TELNUSA NMS"
+     },
+     "host": {
+      "filter": "$device"
+     },
+     "item": {
+      "filter": "/rut\\.sys\\.flash\\.pct/"
+     },
+     "options": {
+      "showDisabledItems": false,
+      "skipEmptyValues": false
+     },
+     "queryType": "Metrics",
+     "refId": "B",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Memory & Flash Usage",
+   "type": "timeseries"
+  },
+  {
+   "datasource": {
+    "type": "alexanderzobnin-zabbix-datasource",
+    "uid": "telnusa-zabbix"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "drawStyle": "line",
+      "lineInterpolation": "linear",
+      "lineWidth": 1.5,
+      "pointSize": 3,
+      "showPoints": "auto",
+      "spanNulls": false
+     },
+     "unit": "celsius"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 7,
+    "w": 8,
+    "x": 0,
+    "y": 44
+   },
+   "id": 10,
+   "options": {
+    "legend": {
+     "calcs": [
+      "lastNotNull",
+      "max",
+      "min"
+     ],
+     "displayMode": "table",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "none"
+    }
+   },
+   "targets": [
+    {
+     "application": {
+      "filter": ""
+     },
+     "datasource": {
+      "type": "alexanderzobnin-zabbix-datasource",
+      "uid": "telnusa-zabbix"
+     },
+     "functions": [],
+     "group": {
+      "filter": "TELNUSA NMS"
+     },
+     "host": {
+      "filter": "$device"
+     },
+     "item": {
+      "filter": "/rut\\.modem\\.temperature\\.c/"
+     },
+     "options": {
+      "showDisabledItems": false,
+      "skipEmptyValues": false
+     },
+     "queryType": "Metrics",
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Modem Temperature",
+   "type": "timeseries"
+  },
+  {
+   "datasource": {
+    "type": "alexanderzobnin-zabbix-datasource",
+    "uid": "telnusa-zabbix"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "drawStyle": "line",
+      "lineInterpolation": "linear",
+      "lineWidth": 1.5,
+      "pointSize": 3,
+      "showPoints": "auto",
+      "spanNulls": false
+     },
+     "unit": "dBm"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 7,
+    "w": 8,
+    "x": 8,
+    "y": 44
+   },
+   "id": 11,
+   "options": {
+    "legend": {
+     "calcs": [
+      "lastNotNull",
+      "max",
+      "min"
+     ],
+     "displayMode": "table",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "none"
+    }
+   },
+   "targets": [
+    {
+     "application": {
+      "filter": ""
+     },
+     "datasource": {
+      "type": "alexanderzobnin-zabbix-datasource",
+      "uid": "telnusa-zabbix"
+     },
+     "functions": [],
+     "group": {
+      "filter": "TELNUSA NMS"
+     },
+     "host": {
+      "filter": "$device"
+     },
+     "item": {
+      "filter": "/rut\\.modem\\.signal\\.dbm/"
+     },
+     "options": {
+      "showDisabledItems": false,
+      "skipEmptyValues": false
+     },
+     "queryType": "Metrics",
+     "refId": "A",
+     "resultFormat": "time_series"
+    },
+    {
+     "application": {
+      "filter": ""
+     },
+     "datasource": {
+      "type": "alexanderzobnin-zabbix-datasource",
+      "uid": "telnusa-zabbix"
+     },
+     "functions": [],
+     "group": {
+      "filter": "TELNUSA NMS"
+     },
+     "host": {
+      "filter": "$device"
+     },
+     "item": {
+      "filter": "/rut\\.modem\\.rsrp\\.dbm/"
+     },
+     "options": {
+      "showDisabledItems": false,
+      "skipEmptyValues": false
+     },
+     "queryType": "Metrics",
+     "refId": "B",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Signal & RSRP",
+   "type": "timeseries"
+  },
+  {
+   "datasource": {
+    "type": "alexanderzobnin-zabbix-datasource",
+    "uid": "telnusa-zabbix"
+   },
+   "fieldConfig": {
+    "defaults": {
+     "custom": {
+      "drawStyle": "line",
+      "lineInterpolation": "linear",
+      "lineWidth": 1.5,
+      "pointSize": 3,
+      "showPoints": "auto",
+      "spanNulls": false
+     },
+     "unit": "s"
+    },
+    "overrides": []
+   },
+   "gridPos": {
+    "h": 7,
+    "w": 8,
+    "x": 16,
+    "y": 44
+   },
+   "id": 12,
+   "options": {
+    "legend": {
+     "calcs": [
+      "lastNotNull",
+      "max",
+      "min"
+     ],
+     "displayMode": "table",
+     "placement": "bottom",
+     "showLegend": true
+    },
+    "tooltip": {
+     "mode": "multi",
+     "sort": "none"
+    }
+   },
+   "targets": [
+    {
+     "application": {
+      "filter": ""
+     },
+     "datasource": {
+      "type": "alexanderzobnin-zabbix-datasource",
+      "uid": "telnusa-zabbix"
+     },
+     "functions": [],
+     "group": {
+      "filter": "TELNUSA NMS"
+     },
+     "host": {
+      "filter": "$device"
+     },
+     "item": {
+      "filter": "/rut\\.sys\\.uptime\\.s/"
+     },
+     "options": {
+      "showDisabledItems": false,
+      "skipEmptyValues": false
+     },
+     "queryType": "Metrics",
+     "refId": "A",
+     "resultFormat": "time_series"
+    }
+   ],
+   "title": "Router Uptime",
+   "type": "timeseries"
+  }
+ ],
+ "refresh": "30s",
+ "schemaVersion": 39,
+ "style": "dark",
+ "tags": [
+  "telnusa",
+  "rut906",
+  "nms",
+  "operational"
+ ],
+ "templating": {
+  "list": [
+   {
+    "current": {
+     "selected": true,
+     "text": "RUT-1234567890",
+     "value": "RUT-1234567890"
+    },
+    "datasource": {
+     "type": "alexanderzobnin-zabbix-datasource",
+     "uid": "telnusa-zabbix"
+    },
+    "definition": "TELNUSA NMS.*",
+    "hide": 0,
+    "includeAll": true,
+    "allValue": ".*",
+    "label": "Gateway Device",
+    "name": "device",
+    "options": [],
+    "query": {
+     "application": "",
+     "group": "TELNUSA NMS",
+     "host": "",
+     "item": "",
+     "itemTag": "",
+     "queryType": "2"
+    },
+    "regex": "/RUT-.*/",
+    "skipUrlSync": false,
+    "sort": 1,
+    "type": "query"
+   }
+  ]
+ },
+ "time": {
+  "from": "now-24h",
+  "to": "now"
+ },
+ "timepicker": {
+  "refresh_intervals": [
+   "5s",
+   "10s",
+   "30s",
+   "1m",
+   "5m",
+   "15m",
+   "30m",
+   "1h",
+   "2h",
+   "1d"
+  ]
+ },
+ "timezone": "browser",
+ "title": "TELNUSA NMS: Fleet & Telemetry Overview",
+ "uid": "telnusa-nms-overview",
+ "version": 1,
+ "weekStart": ""
+}

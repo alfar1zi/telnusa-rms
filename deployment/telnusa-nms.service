@@ -1,0 +1,38 @@
+[Unit]
+Description=TELNUSA NMS Backend Service
+After=network.target network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=telnusa
+Group=telnusa
+WorkingDirectory=/opt/telnusa-nms
+EnvironmentFile=/etc/telnusa-nms/nms.env
+ExecStart=/opt/telnusa-nms/.venv/bin/python -m backend.app
+Restart=always
+RestartSec=5s
+
+# Security hardening
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectKernelLogs=true
+ProtectKernelModules=true
+ProtectKernelTunables=true
+ProtectControlGroups=true
+ProtectClock=true
+RestrictNamespaces=true
+RestrictSUIDSGID=true
+LockPersonality=true
+MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+ReadWritePaths=/var/lib/telnusa-nms
+UMask=027
+CapabilityBoundingSet=
+AmbientCapabilities=
+[Install]
+WantedBy=multi-user.target
