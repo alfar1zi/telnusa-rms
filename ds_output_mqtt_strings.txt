@@ -1,0 +1,92 @@
+	host
+dt	name8Server address '%s' is already used for input '%s'.
+format
+string
+mqtt_in_host
+table_get
+input
+ipairs
+output
+collection
+config
+table_find#
+	port
+irange
+mqtt_client_id
+mqtt_client_id
+check_array
+is_bool
+	cert
+check_array
+is_bool
+is_bool
+mqtt_use_tpm
+config
+get_abs_value(
+hexstring
+uciname
+is_bool
+is_bool
+credentials_validate
+credentials_validate
+	mqtt
+plugin
+config
+get_abs_value&
+is_bool
+irange
+mqtt_msg_count
+sensitive
+mqtt_password
+mqtt_username
+mqtt_insecure
+mqtt_username
+mqtt_password
+mqtt_use_credentials
+mqtt_identity
+sensitive
+mqtt_psk
+	tpm2
+failsafe
+service
+data_sender_output	type	keys
+mqtt_keyfile
+failsafe
+length_warnings
+service
+data_sender_output	type
+certificates
+mqtt_certfile
+certificate
+cert_types
+root_ca
+failsafe
+length_warnings
+service
+data_sender_output	type
+certificates
+mqtt_cafile
+mqtt_use_tpm
+has_tpm
+mqtt_device_files
+mqtt_psk
+mqtt_identity	cert
+mqtt_cafile
+mqtt_tls_type
+mqtt_tls_type
+mqtt_tls
+mqtt_qos
+mqtt_client_id
+maxlength
+mqtt_topic
+mqtt_keepalive
+mqtt_port
+validate
+mqtt_host
+option
+mqtt_host
+mqtt_topic	mqtt
+require
+endpoint
+vuci.board
+require
