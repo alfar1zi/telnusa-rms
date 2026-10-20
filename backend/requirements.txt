@@ -1,0 +1,11 @@
+paho-mqtt==2.1.0
+argon2-cffi==23.1.0
+
+# Imported by backend/guacamole.py (_sign_and_encrypt) to build the
+# Guacamole AES-128-CBC assertion. Pinned to the version verified running
+# in production (/opt/telnusa-nms/.venv).
+cryptography==46.0.7
+
+# Reports export: native Excel chart objects (openpyxl draws the chart from cells,
+# so no image is embedded and the numbers stay numbers).
+openpyxl==3.1.5
