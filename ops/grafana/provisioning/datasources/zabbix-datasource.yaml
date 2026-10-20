@@ -1,0 +1,18 @@
+apiVersion: 1
+
+datasources:
+  - name: Zabbix
+    type: alexanderzobnin-zabbix-datasource
+    access: proxy
+    uid: zabbix
+    url: http://127.0.0.1/zabbix/api_jsonrpc.php
+    jsonData:
+      trends: true
+      trendsFrom: 7d
+      trendsRange: 4d
+      dbConnectionEnable: false
+    secureJsonData:
+      # Handled through ZABBIX_TOKEN or environment in production
+      authType: 'token'
+    isDefault: true
+    editable: true
