@@ -1,0 +1,211 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 880" width="1400" height="880" role="img" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif">
+  <title>Deployment view, one runtime host</title>
+  <desc>Deployment diagram. Field devices sit behind a private overlay network. One Ubuntu host runs the reverse proxy, the TELNUSA NMS service with its SQLite state, Zabbix with MySQL, Grafana, and the Guacamole stack. The operator browser reaches all of it through a single ingress.</desc>
+  <defs>
+    <marker id="flow" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 8 4 L 0 8 Z" fill="#475569"/>
+    </marker>
+  </defs>
+
+  <rect width="1400" height="880" fill="#ffffff"/>
+
+  <text x="32" y="56" font-size="20" font-weight="600" fill="#111827">Deployment view, one runtime host</text>
+  <text x="32" y="80" font-size="14" fill="#4b5563">What runs where: field devices behind a private overlay, one host serving ingress, application, monitoring and remote access.</text>
+
+  <g font-size="12" fill="#4b5563">
+    <rect x="812" y="38" width="16" height="16" rx="2" fill="#ffffff" stroke="#d1d5db"/>
+    <text x="836" y="51">Device</text>
+    <rect x="920" y="38" width="16" height="16" rx="2" fill="#f5f3ff" stroke="#c4b5fd"/>
+    <text x="944" y="51">Private overlay</text>
+    <rect x="1076" y="38" width="16" height="16" rx="2" fill="#eef2ff" stroke="#a5b4fc"/>
+    <text x="1100" y="51">Host service</text>
+    <rect x="1216" y="38" width="16" height="16" rx="2" fill="#ecfdf5" stroke="#6ee7b7"/>
+    <text x="1240" y="51">Data or container</text>
+  </g>
+  <line x1="32" y1="96" x2="1368" y2="96" stroke="#d1d5db"/>
+
+  <rect x="32" y="112" width="256" height="648" rx="8" fill="#f9fafb" stroke="#6b7280" stroke-dasharray="8 4"/>
+  <text x="48" y="140" font-size="12" font-weight="600" fill="#4b5563" letter-spacing="0.32">FIELD SITE</text>
+  <rect x="352" y="112" width="192" height="648" rx="8" fill="#f9fafb" stroke="#6b7280" stroke-dasharray="8 4"/>
+  <text x="368" y="140" font-size="12" font-weight="600" fill="#4b5563" letter-spacing="0.32">PRIVATE OVERLAY</text>
+  <rect x="592" y="112" width="776" height="648" rx="8" fill="#f9fafb" stroke="#6b7280" stroke-dasharray="8 4"/>
+  <text x="608" y="140" font-size="12" font-weight="600" fill="#4b5563" letter-spacing="0.32">RUNTIME HOST: UBUNTU SERVER, ONE MACHINE</text>
+
+  <!-- field -->
+  <rect x="48" y="152" width="224" height="240" rx="8" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="64" y="180" font-size="16" font-weight="600" fill="#111827">Teltonika RUT906</text>
+  <text x="64" y="200" font-size="12" fill="#4b5563">site site-a, serial and epoch in the payload</text>
+  <line x1="64" y1="212" x2="256" y2="212" stroke="#e5e7eb"/>
+  <g font-size="12">
+    <text x="64" y="238" fill="#065f46">MPPT charge controller</text>
+    <text x="256" y="238" fill="#047857" text-anchor="end">unit 2</text>
+    <text x="64" y="262" fill="#065f46">three-phase energy meter</text>
+    <text x="256" y="262" fill="#047857" text-anchor="end">unit 1</text>
+    <text x="64" y="286" fill="#065f46">pyranometer</text>
+    <text x="256" y="286" fill="#047857" text-anchor="end">unit 3</text>
+    <text x="64" y="310" fill="#065f46">Modbus RTU, one bus</text>
+    <text x="256" y="310" fill="#047857" text-anchor="end">9600 8N1</text>
+    <text x="64" y="334" fill="#065f46">poll period</text>
+    <text x="256" y="334" fill="#047857" text-anchor="end">20 s</text>
+    <text x="64" y="358" fill="#065f46">publishes every 20 s</text>
+    <text x="256" y="358" fill="#047857" text-anchor="end">12 fields</text>
+  </g>
+  <line x1="64" y1="374" x2="256" y2="374" stroke="#e5e7eb"/>
+  <text x="64" y="392" font-size="12" fill="#4b5563">no inbound port is opened on the device</text>
+
+  <rect x="48" y="408" width="224" height="112" rx="8" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="64" y="436" font-size="16" font-weight="600" fill="#111827">Field network</text>
+  <text x="64" y="456" font-size="12" fill="#4b5563">LAN baseline and overlay address</text>
+  <line x1="64" y1="468" x2="256" y2="468" stroke="#e5e7eb"/>
+  <text x="64" y="494" font-size="12" fill="#1f2937">router LAN 192.168.10.1</text>
+  <text x="64" y="512" font-size="12" fill="#1f2937">overlay member, private range</text>
+
+  <!-- overlay -->
+  <rect x="368" y="152" width="160" height="240" rx="8" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="384" y="180" font-size="16" font-weight="600" fill="#4c1d95">ZeroTier</text>
+  <text x="384" y="200" font-size="12" fill="#5b21b6">private overlay network</text>
+  <line x1="384" y1="212" x2="528" y2="212" stroke="#c4b5fd"/>
+  <g font-size="12">
+    <text x="384" y="238" fill="#5b21b6">members</text>
+    <text x="512" y="238" fill="#6d28d9" text-anchor="end">two nodes</text>
+    <text x="384" y="262" fill="#5b21b6">range</text>
+    <text x="512" y="262" fill="#6d28d9" text-anchor="end">private</text>
+    <text x="384" y="286" fill="#5b21b6">exposure</text>
+    <text x="512" y="286" fill="#6d28d9" text-anchor="end">none</text>
+    <text x="384" y="310" fill="#5b21b6">carries</text>
+    <text x="512" y="310" fill="#6d28d9" text-anchor="end">WebUI, SSH</text>
+  </g>
+
+  <rect x="368" y="408" width="160" height="112" rx="8" fill="#f5f3ff" stroke="#c4b5fd"/>
+  <text x="384" y="436" font-size="16" font-weight="600" fill="#4c1d95">Targets</text>
+  <text x="384" y="456" font-size="12" fill="#5b21b6">resolved on the server</text>
+  <line x1="384" y1="468" x2="528" y2="468" stroke="#c4b5fd"/>
+  <text x="384" y="494" font-size="12" fill="#5b21b6">from the device registry</text>
+  <text x="384" y="512" font-size="12" fill="#5b21b6">never from the browser</text>
+
+  <!-- host row 1 -->
+  <rect x="608" y="152" width="224" height="192" rx="8" fill="#eef2ff" stroke="#a5b4fc"/>
+  <text x="624" y="180" font-size="16" font-weight="600" fill="#312e81">Ingress</text>
+  <text x="624" y="200" font-size="12" fill="#3730a3">Apache 2.4</text>
+  <line x1="624" y1="212" x2="816" y2="212" stroke="#a5b4fc"/>
+  <g font-size="12">
+    <text x="624" y="238" fill="#312e81">serves</text>
+    <text x="816" y="238" fill="#3730a3" text-anchor="end">static build</text>
+    <text x="624" y="262" fill="#312e81">proxies</text>
+    <text x="816" y="262" fill="#3730a3" text-anchor="end">/api, /guacamole</text>
+    <text x="624" y="286" fill="#312e81">TLS</text>
+    <text x="816" y="286" fill="#3730a3" text-anchor="end">terminated here</text>
+    <text x="624" y="310" fill="#312e81">headers</text>
+    <text x="816" y="310" fill="#3730a3" text-anchor="end">security set</text>
+  </g>
+  <text x="624" y="334" font-size="12" fill="#3730a3">the only ingress to the host</text>
+
+  <rect x="864" y="152" width="240" height="192" rx="8" fill="#eef2ff" stroke="#a5b4fc"/>
+  <text x="880" y="180" font-size="16" font-weight="600" fill="#312e81">TELNUSA NMS</text>
+  <text x="880" y="200" font-size="12" fill="#3730a3">systemd service, Python</text>
+  <line x1="880" y1="212" x2="1088" y2="212" stroke="#a5b4fc"/>
+  <g font-size="12">
+    <text x="880" y="238" fill="#312e81">bind</text>
+    <text x="1088" y="238" fill="#3730a3" text-anchor="end">loopback only</text>
+    <text x="880" y="262" fill="#312e81">ingest</text>
+    <text x="1088" y="262" fill="#3730a3" text-anchor="end">HTTPS and MQTT</text>
+    <text x="880" y="286" fill="#312e81">workers</text>
+    <text x="1088" y="286" fill="#3730a3" text-anchor="end">delivery, retention</text>
+    <text x="880" y="310" fill="#312e81">serves</text>
+    <text x="1088" y="310" fill="#3730a3" text-anchor="end">JSON API and SSE</text>
+  </g>
+  <text x="880" y="334" font-size="12" fill="#3730a3">secrets read from the service environment</text>
+
+  <rect x="1136" y="152" width="216" height="192" rx="8" fill="#ecfdf5" stroke="#6ee7b7"/>
+  <text x="1152" y="180" font-size="16" font-weight="600" fill="#064e3b">State</text>
+  <text x="1152" y="200" font-size="12" fill="#047857">SQLite, one file</text>
+  <line x1="1152" y1="212" x2="1336" y2="212" stroke="#6ee7b7"/>
+  <g font-size="12">
+    <text x="1152" y="238" fill="#065f46">devices</text>
+    <text x="1336" y="238" fill="#047857" text-anchor="end">registry</text>
+    <text x="1152" y="262" fill="#065f46">queue</text>
+    <text x="1336" y="262" fill="#047857" text-anchor="end">delivery and retries</text>
+    <text x="1152" y="286" fill="#065f46">sessions</text>
+    <text x="1336" y="286" fill="#047857" text-anchor="end">digest of the cookie</text>
+    <text x="1152" y="310" fill="#065f46">audit</text>
+    <text x="1336" y="310" fill="#047857" text-anchor="end">actor and action</text>
+  </g>
+  <text x="1152" y="334" font-size="12" fill="#047857">retention bounded on every cycle</text>
+
+  <!-- host row 2 -->
+  <rect x="880" y="376" width="240" height="192" rx="8" fill="#ecfdf5" stroke="#6ee7b7"/>
+  <text x="896" y="404" font-size="16" font-weight="600" fill="#064e3b">Zabbix 7.4</text>
+  <text x="896" y="424" font-size="12" fill="#047857">history and problem engine</text>
+  <line x1="624" y1="436" x2="856" y2="436" stroke="#6ee7b7"/>
+  <g font-size="12">
+    <text x="896" y="462" fill="#065f46">hosts</text>
+    <text x="1104" y="462" fill="#047857" text-anchor="end">one per serial</text>
+    <text x="896" y="486" fill="#065f46">items</text>
+    <text x="1104" y="486" fill="#047857" text-anchor="end">12 trapper, numeric</text>
+    <text x="896" y="510" fill="#065f46">reads</text>
+    <text x="1104" y="510" fill="#047857" text-anchor="end">history, problems</text>
+    <text x="896" y="534" fill="#065f46">outage</text>
+    <text x="1104" y="534" fill="#047857" text-anchor="end">queue absorbs it</text>
+  </g>
+  <text x="896" y="556" font-size="12" fill="#047857">ingestion continues while it is down</text>
+
+  <rect x="608" y="376" width="240" height="192" rx="8" fill="#ecfdf5" stroke="#6ee7b7"/>
+  <text x="624" y="404" font-size="16" font-weight="600" fill="#064e3b">MySQL 8.4</text>
+  <text x="624" y="424" font-size="12" fill="#047857">backing store</text>
+  <line x1="920" y1="436" x2="1096" y2="436" stroke="#6ee7b7"/>
+  <g font-size="12">
+    <text x="624" y="462" fill="#065f46">owner</text>
+    <text x="832" y="462" fill="#047857" text-anchor="end">Zabbix</text>
+    <text x="624" y="486" fill="#065f46">history</text>
+    <text x="832" y="486" fill="#047857" text-anchor="end">tables</text>
+    <text x="624" y="510" fill="#065f46">access</text>
+    <text x="832" y="510" fill="#047857" text-anchor="end">local socket</text>
+  </g>
+
+  <rect x="1152" y="376" width="200" height="192" rx="8" fill="#ecfdf5" stroke="#6ee7b7"/>
+  <text x="1168" y="404" font-size="16" font-weight="600" fill="#064e3b">Grafana 13</text>
+  <text x="1168" y="424" font-size="12" fill="#047857">operational dashboards</text>
+  <line x1="1160" y1="436" x2="1336" y2="436" stroke="#6ee7b7"/>
+  <g font-size="12">
+    <text x="1168" y="462" fill="#065f46">source</text>
+    <text x="1336" y="462" fill="#047857" text-anchor="end">Zabbix plugin</text>
+    <text x="1168" y="486" fill="#065f46">provisioned</text>
+    <text x="1336" y="486" fill="#047857" text-anchor="end">from the repo</text>
+    <text x="1168" y="510" fill="#065f46">board</text>
+    <text x="1336" y="510" fill="#047857" text-anchor="end">fleet overview</text>
+  </g>
+
+  <!-- host row 3 -->
+  <rect x="608" y="600" width="368" height="128" rx="8" fill="#ecfdf5" stroke="#6ee7b7"/>
+  <text x="624" y="628" font-size="16" font-weight="600" fill="#064e3b">Guacamole and guacd</text>
+  <text x="624" y="648" font-size="12" fill="#047857">browser console gateway</text>
+  <line x1="624" y1="660" x2="960" y2="660" stroke="#6ee7b7"/>
+  <text x="624" y="684" font-size="12" fill="#065f46">signed grant, single use, short lived</text>
+  <text x="624" y="704" font-size="12" fill="#065f46">no key or password reaches the browser</text>
+
+  <rect x="992" y="600" width="360" height="128" rx="8" fill="#eef2ff" stroke="#a5b4fc"/>
+  <text x="1008" y="628" font-size="16" font-weight="600" fill="#312e81">Host operations</text>
+  <text x="1008" y="648" font-size="12" fill="#3730a3">unit file, environment file, backups</text>
+  <line x1="1008" y1="660" x2="1336" y2="660" stroke="#a5b4fc"/>
+  <text x="1008" y="684" font-size="12" fill="#312e81">state file owned by the service user</text>
+  <text x="1008" y="704" font-size="12" fill="#312e81">secrets outside the repository</text>
+
+  <!-- links -->
+  <line x1="272" y1="272" x2="360" y2="272" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <text x="320" y="264" font-size="12" fill="#475569" text-anchor="middle">publish</text>
+  <line x1="528" y1="272" x2="600" y2="272" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <text x="568" y="264" font-size="12" fill="#475569" text-anchor="middle">overlay</text>
+  <line x1="832" y1="248" x2="856" y2="248" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <text x="844" y="240" font-size="12" fill="#475569" text-anchor="middle">proxy</text>
+  <line x1="1104" y1="248" x2="1128" y2="248" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <text x="1116" y="240" font-size="12" fill="#475569" text-anchor="middle">state</text>
+  <line x1="960" y1="344" x2="960" y2="368" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <text x="944" y="362" font-size="12" fill="#475569" text-anchor="end">trapper values</text>
+  <line x1="1020" y1="376" x2="1020" y2="352" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <text x="1036" y="362" font-size="12" fill="#475569">history reads</text>
+
+  <!-- footer -->
+  <line x1="32" y1="816" x2="1368" y2="816" stroke="#d1d5db"/>
+  <text x="32" y="840" font-size="12" fill="#6b7280">Source: production host and service configuration read on 22 October 2026. Version 1.</text>
+  <text x="1368" y="840" font-size="12" fill="#6b7280" text-anchor="end">One machine carries ingress, application, monitoring and remote access.</text>
+</svg>

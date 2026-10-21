@@ -47,6 +47,18 @@ unintegrated source is labelled instead of drawn as zero.
 | Remote access | Apache reverse proxy, Guacamole and guacd, ZeroTier overlay |
 | Device side | Teltonika RUT906, Modbus client, Data Sender with Lua formatters |
 
+## System architecture
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/architecture-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/architecture.svg">
+  <img alt="System architecture: telemetry path on the first row, remote access path on the second" src="docs/images/architecture.svg">
+</picture>
+
+Telemetry path on the first row, remote access path on the second. The browser
+never reaches MQTT, Zabbix, the database or a device directly, and every remote
+target is resolved on the server from the device registry.
+
 ## Data path
 
 | Stage | What happens |
@@ -112,7 +124,11 @@ Zabbix host identity is `RUT-<serial>`, created once and reconciled, never dupli
 
 *Device image: Teltonika Networks.*
 
-![Installation diagram](docs/images/installation-rut906.svg)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/installation-rut906-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/installation-rut906.svg">
+  <img alt="Field installation and data flow: three Modbus sensors on one RS485 bus, the router, and the platform" src="docs/images/installation-rut906.svg">
+</picture>
 
 ### RS485 bus
 
@@ -227,6 +243,12 @@ npm run build          # emits dist/ for the web server
 | State | `/var/lib/telnusa-nms/nms.db` |
 | Service environment | `/etc/telnusa-nms/nms.env`, owner only |
 | Backend bind | `127.0.0.1:8080`, reached through the reverse proxy |
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/deployment-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="docs/images/deployment.svg">
+  <img alt="Deployment view: field site, private overlay, and one runtime host carrying ingress, application, monitoring and remote access" src="docs/images/deployment.svg">
+</picture>
 
 The repository ships the virtual host, the systemd unit and the Grafana
 provisioning. The proxy is the only ingress, the trusted proxy hop count is set

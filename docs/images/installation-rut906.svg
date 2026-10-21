@@ -1,97 +1,226 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1240 660" width="1240" height="660" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif">
-  <text x="32" y="44" font-size="21" font-weight="600" fill="#111827">Field installation: RUT906 with three sensors</text>
-  <text x="32" y="70" font-size="13" fill="#6b7280">One RS485 bus, polling and formatting on the router, delivery to the NMS over MQTT TLS or HTTPS.</text>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 920" width="1400" height="920" role="img" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif">
+  <title>Field installation and data flow, one reference site</title>
+  <desc>Three Modbus sensors share one RS485 bus and are polled by a Teltonika RUT906 every 20 seconds. The router publishes one payload of twelve fields to the TELNUSA NMS over HTTPS. The NMS queues the values and writes them to Zabbix, reads history and problems back, and serves the operator browser through its API and Server-Sent Events.</desc>
+  <defs>
+    <marker id="flow" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 8 4 L 0 8 Z" fill="#475569"/>
+    </marker>
+  </defs>
 
-  <g>
-    <rect x="32" y="98" width="352" height="150" rx="10" fill="#f8fafc" stroke="#94a3b8"/>
-    <text x="50" y="124" font-size="15" font-weight="600" fill="#111827">1 Solar charge controller</text>
-    <text x="50" y="144" font-size="12" fill="#475569">IPANDEE, Modbus RTU, unit 2, function 3</text>
-    <text x="50" y="168" font-size="11.5" fill="#374151">pv_voltage, register 2, divide by 10, V</text>
-    <text x="50" y="185" font-size="11.5" fill="#374151">charging_current, register 4, divide by 10, A</text>
-    <text x="50" y="202" font-size="11.5" fill="#374151">output_voltage, register 5, divide by 10, V</text>
-    <text x="50" y="219" font-size="11.5" fill="#374151">load_current, register 7, divide by 10, A</text>
-    <text x="50" y="238" font-size="11" fill="#0f766e">four contracted fields, eight more for diagnostics</text>
+  <rect width="1400" height="920" fill="#ffffff"/>
+
+  <text x="32" y="56" font-size="20" font-weight="600" fill="#111827">Field installation and data flow, one reference site</text>
+  <text x="32" y="80" font-size="14" fill="#4b5563">Three Modbus sensors on one RS485 bus, polled by a Teltonika RUT906 every 20 seconds, delivered to the TELNUSA NMS.</text>
+
+  <g font-size="12" fill="#4b5563">
+    <rect x="812" y="38" width="16" height="16" rx="2" fill="#ffffff" stroke="#d1d5db"/>
+    <text x="836" y="51">Field element</text>
+    <rect x="944" y="38" width="16" height="16" rx="2" fill="#eef2ff" stroke="#a5b4fc"/>
+    <text x="968" y="51">Edge element</text>
+    <rect x="1076" y="38" width="16" height="16" rx="2" fill="#ecfdf5" stroke="#6ee7b7"/>
+    <text x="1100" y="51">Platform element</text>
+    <rect x="1232" y="38" width="16" height="16" rx="2" fill="#fffbeb" stroke="#fcd34d" stroke-dasharray="6 3"/>
+    <text x="1256" y="51">Open item</text>
+  </g>
+  <line x1="32" y1="96" x2="1368" y2="96" stroke="#d1d5db"/>
+
+  <rect x="32" y="112" width="480" height="712" rx="8" fill="#f9fafb" stroke="#6b7280" stroke-dasharray="8 4"/>
+  <text x="48" y="140" font-size="12" font-weight="600" fill="#4b5563" letter-spacing="0.32">FIELD: SENSORS AND BUS</text>
+  <rect x="576" y="112" width="328" height="712" rx="8" fill="#f9fafb" stroke="#6b7280" stroke-dasharray="8 4"/>
+  <text x="592" y="140" font-size="12" font-weight="600" fill="#4b5563" letter-spacing="0.32">EDGE: ROUTER</text>
+  <rect x="1000" y="112" width="368" height="712" rx="8" fill="#f9fafb" stroke="#6b7280" stroke-dasharray="8 4"/>
+  <text x="1016" y="140" font-size="12" font-weight="600" fill="#4b5563" letter-spacing="0.32">PLATFORM: TELNUSA NMS</text>
+
+  <!-- sensor 1 -->
+  <rect x="48" y="152" width="448" height="192" rx="8" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="64" y="180" font-size="16" font-weight="600" fill="#111827">MPPT charge controller</text>
+  <text x="64" y="200" font-size="12" fill="#4b5563">IPANDEE, unit 2, function 3, 12 registers polled</text>
+  <line x1="64" y1="212" x2="480" y2="212" stroke="#e5e7eb"/>
+  <g font-size="12">
+    <text x="64" y="238" fill="#1f2937">pv_voltage, reg 2, /10 V</text>
+    <text x="480" y="238" fill="#0f766e" text-anchor="end">rut.mppt.pv.v</text>
+    <text x="64" y="262" fill="#1f2937">charging_current, reg 4, /10 A</text>
+    <text x="480" y="262" fill="#0f766e" text-anchor="end">rut.mppt.pv.a</text>
+    <text x="64" y="286" fill="#1f2937">output_voltage, reg 5, /10 V</text>
+    <text x="480" y="286" fill="#0f766e" text-anchor="end">rut.mppt.out.v</text>
+    <text x="64" y="310" fill="#1f2937">load_current, reg 7, /10 A</text>
+    <text x="480" y="310" fill="#0f766e" text-anchor="end">rut.mppt.out.a</text>
+  </g>
+  <line x1="64" y1="324" x2="480" y2="324" stroke="#e5e7eb"/>
+  <text x="64" y="342" font-size="12" fill="#4b5563">eight further registers are polled locally for diagnostics</text>
+
+  <!-- sensor 2 -->
+  <rect x="48" y="360" width="448" height="176" rx="8" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="64" y="388" font-size="16" font-weight="600" fill="#111827">Three-phase energy meter</text>
+  <text x="64" y="408" font-size="12" fill="#4b5563">PZEM-6L24, unit 1, function 4, 8 registers polled</text>
+  <line x1="64" y1="420" x2="480" y2="420" stroke="#e5e7eb"/>
+  <g font-size="12">
+    <text x="64" y="446" fill="#1f2937">voltage a/b/c, regs 1, 2, 3, /10 V</text>
+    <text x="480" y="446" fill="#0f766e" text-anchor="end">rut.pzem.[abc].voltage</text>
+    <text x="64" y="470" fill="#1f2937">current a/b/c, regs 4, 5, 6, /100 A</text>
+    <text x="480" y="470" fill="#0f766e" text-anchor="end">rut.pzem.[abc].current</text>
+    <text x="64" y="494" fill="#1f2937">energy, reg 59, two registers</text>
+    <text x="480" y="494" fill="#0f766e" text-anchor="end">rut.pzem.energy.kwh</text>
+  </g>
+  <line x1="64" y1="508" x2="480" y2="508" stroke="#e5e7eb"/>
+  <text x="64" y="526" font-size="12" fill="#4b5563">energy is published as read, scale factor still open</text>
+
+  <!-- sensor 3 -->
+  <rect x="48" y="552" width="448" height="112" rx="8" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="64" y="580" font-size="16" font-weight="600" fill="#111827">Pyranometer</text>
+  <text x="64" y="600" font-size="12" fill="#4b5563">Honde RD-PSR-01, unit 3, function 3, 1 register polled</text>
+  <line x1="64" y1="612" x2="480" y2="612" stroke="#e5e7eb"/>
+  <text x="64" y="638" font-size="12" fill="#1f2937">solar_radiation, reg 1, 16 bit high first</text>
+  <text x="480" y="638" font-size="12" fill="#0f766e" text-anchor="end">rut.solar.radiation</text>
+
+  <!-- bus parameters -->
+  <rect x="48" y="680" width="448" height="136" rx="8" fill="#ffffff" stroke="#d1d5db"/>
+  <text x="64" y="708" font-size="16" font-weight="600" fill="#111827">RS485 bus</text>
+  <text x="64" y="728" font-size="12" fill="#4b5563">one master, three slaves, two-wire bus</text>
+  <line x1="64" y1="740" x2="480" y2="740" stroke="#e5e7eb"/>
+  <g font-size="12" fill="#1f2937">
+    <text x="64" y="766">port /dev/rs485, exposed as /dev/ttyS1</text>
+    <text x="64" y="788">9600 baud, 8 data bits, no parity, 1 stop bit</text>
+    <text x="64" y="810">flow control off, half duplex, terminals A and B</text>
   </g>
 
-  <g>
-    <rect x="32" y="262" width="352" height="150" rx="10" fill="#f8fafc" stroke="#94a3b8"/>
-    <text x="50" y="288" font-size="15" font-weight="600" fill="#111827">2 Three-phase energy meter</text>
-    <text x="50" y="308" font-size="12" fill="#475569">PZEM-6L24, Modbus RTU, unit 1, function 4</text>
-    <text x="50" y="332" font-size="11.5" fill="#374151">a, b, c voltage, registers 1, 2, 3, divide by 10, V</text>
-    <text x="50" y="349" font-size="11.5" fill="#374151">a, b, c current, registers 4, 5, 6, divide by 100, A</text>
-    <text x="50" y="366" font-size="11.5" fill="#374151">energy, register 59, 32 bit pair</text>
-    <text x="50" y="388" font-size="11" fill="#b45309">energy is published as read, reference check still open</text>
+  <!-- bus, stubs and labels -->
+  <line x1="552" y1="256" x2="552" y2="632" stroke="#475569" stroke-width="2"/>
+  <line x1="496" y1="256" x2="545" y2="256" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <line x1="496" y1="446" x2="545" y2="446" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <line x1="496" y1="632" x2="545" y2="632" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <line x1="552" y1="368" x2="569" y2="368" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <circle cx="552" cy="256" r="4" fill="#475569"/>
+  <circle cx="552" cy="368" r="4" fill="#475569"/>
+  <circle cx="552" cy="446" r="4" fill="#475569"/>
+  <circle cx="552" cy="632" r="4" fill="#475569"/>
+  <g font-size="12" fill="#475569" text-anchor="middle">
+    <text x="520" y="248">unit 2</text>
+    <text x="520" y="438">unit 1</text>
+    <text x="520" y="624">unit 3</text>
+    <text x="564" y="360">RTU</text>
   </g>
 
+  <!-- router -->
+  <rect x="592" y="152" width="296" height="456" rx="8" fill="#eef2ff" stroke="#a5b4fc"/>
+  <text x="608" y="180" font-size="16" font-weight="600" fill="#312e81">Teltonika RUT906</text>
+  <text x="608" y="200" font-size="12" fill="#3730a3">Modbus client and Data Sender</text>
+  <line x1="608" y1="212" x2="872" y2="212" stroke="#a5b4fc"/>
   <g>
-    <rect x="32" y="426" width="352" height="132" rx="10" fill="#ecfdf5" stroke="#059669"/>
-    <text x="50" y="452" font-size="15" font-weight="600" fill="#064e3b">3 Pyranometer</text>
-    <text x="50" y="472" font-size="12" fill="#065f46">Honde RD-PSR-01, Modbus RTU, unit 3, function 3</text>
-    <text x="50" y="496" font-size="11.5" fill="#065f46">solar_radiation, holding register 1, one register</text>
-    <text x="50" y="513" font-size="11.5" fill="#065f46">16 bit, high byte first, published 1:1 in W/m2</text>
-    <text x="50" y="535" font-size="11" fill="#065f46">integrated and reporting, item rut.solar.radiation</text>
+    <rect x="608" y="228" width="20" height="20" rx="4" fill="#e0e7ff" stroke="#a5b4fc"/>
+    <text x="618" y="242" font-size="12" font-weight="600" fill="#312e81" text-anchor="middle">1</text>
+    <text x="640" y="238" font-size="14" font-weight="600" fill="#312e81">Modbus client</text>
+    <text x="640" y="256" font-size="12" fill="#3730a3">polls units 2, 1 and 3 every 20 s</text>
+
+    <rect x="608" y="284" width="20" height="20" rx="4" fill="#e0e7ff" stroke="#a5b4fc"/>
+    <text x="618" y="298" font-size="12" font-weight="600" fill="#312e81" text-anchor="middle">2</text>
+    <text x="640" y="294" font-size="14" font-weight="600" fill="#312e81">Combined input</text>
+    <text x="640" y="312" font-size="12" fill="#3730a3">12 requests in one payload</text>
+
+    <rect x="608" y="340" width="20" height="20" rx="4" fill="#e0e7ff" stroke="#a5b4fc"/>
+    <text x="618" y="354" font-size="12" font-weight="600" fill="#312e81" text-anchor="middle">3</text>
+    <text x="640" y="350" font-size="14" font-weight="600" fill="#312e81">Lua formatter</text>
+    <text x="640" y="368" font-size="12" fill="#3730a3">scale factors, identity, epoch</text>
+
+    <rect x="608" y="396" width="20" height="20" rx="4" fill="#e0e7ff" stroke="#a5b4fc"/>
+    <text x="618" y="410" font-size="12" font-weight="600" fill="#312e81" text-anchor="middle">4</text>
+    <text x="640" y="406" font-size="14" font-weight="600" fill="#312e81">Publish</text>
+    <text x="640" y="424" font-size="12" fill="#3730a3">every 20 s per collection</text>
+  </g>
+  <line x1="608" y1="452" x2="872" y2="452" stroke="#a5b4fc"/>
+  <text x="608" y="474" font-size="12" font-weight="600" fill="#4338ca" letter-spacing="0.32">TRANSPORT</text>
+  <text x="608" y="498" font-size="12" fill="#312e81">MQTT over TLS, port 8883</text>
+  <rect x="792" y="486" width="80" height="18" rx="9" fill="#fffbeb" stroke="#fcd34d" stroke-dasharray="6 3"/>
+  <text x="832" y="499" font-size="12" fill="#92400e" text-anchor="middle">disabled</text>
+  <text x="608" y="524" font-size="12" fill="#312e81">HTTPS ingest, port 443</text>
+  <rect x="792" y="512" width="80" height="18" rx="9" fill="#ecfdf5" stroke="#6ee7b7"/>
+  <text x="832" y="525" font-size="12" fill="#065f46" text-anchor="middle">active</text>
+  <line x1="608" y1="540" x2="872" y2="540" stroke="#a5b4fc"/>
+  <text x="608" y="562" font-size="12" fill="#3730a3">retry 10 times, 1 s timeout</text>
+  <text x="608" y="582" font-size="12" fill="#3730a3">MQTT QoS 0, keepalive 60 s</text>
+
+  <!-- open items -->
+  <rect x="592" y="624" width="296" height="200" rx="8" fill="#fffbeb" stroke="#fcd34d" stroke-dasharray="8 4"/>
+  <text x="608" y="652" font-size="16" font-weight="600" fill="#92400e">Open items</text>
+  <line x1="608" y1="664" x2="872" y2="664" stroke="#fcd34d"/>
+  <g font-size="12" fill="#92400e">
+    <text x="608" y="690">Energy scale factor, validate the counter</text>
+    <text x="608" y="708">against a reference meter.</text>
+    <text x="608" y="736">MQTT credentials, needed before the</text>
+    <text x="608" y="754">MQTT output is enabled again.</text>
+  </g>
+  <line x1="608" y1="772" x2="872" y2="772" stroke="#fcd34d"/>
+  <text x="608" y="796" font-size="12" fill="#92400e">telemetry currently arrives over HTTPS</text>
+
+  <!-- platform: state -->
+  <rect x="1016" y="152" width="336" height="256" rx="8" fill="#ecfdf5" stroke="#6ee7b7"/>
+  <text x="1032" y="180" font-size="16" font-weight="600" fill="#064e3b">TELNUSA NMS</text>
+  <text x="1032" y="200" font-size="12" fill="#047857">Python backend, SQLite control plane</text>
+  <line x1="1032" y1="212" x2="1336" y2="212" stroke="#6ee7b7"/>
+  <g font-size="12">
+    <text x="1032" y="238" fill="#065f46">identity</text>
+    <text x="1336" y="238" fill="#047857" text-anchor="end">site id, serial, epoch seconds</text>
+    <text x="1032" y="262" fill="#065f46">validation</text>
+    <text x="1336" y="262" fill="#047857" text-anchor="end">numeric sanity, metric whitelist</text>
+    <text x="1032" y="286" fill="#065f46">registry</text>
+    <text x="1336" y="286" fill="#047857" text-anchor="end">created on first valid payload</text>
+    <text x="1032" y="310" fill="#065f46">queue</text>
+    <text x="1336" y="310" fill="#047857" text-anchor="end">durable, bounded retries</text>
+    <text x="1032" y="334" fill="#065f46">latest state</text>
+    <text x="1336" y="334" fill="#047857" text-anchor="end">one row per metric</text>
+    <text x="1032" y="358" fill="#065f46">live updates</text>
+    <text x="1336" y="358" fill="#047857" text-anchor="end">Server-Sent Events</text>
+    <text x="1032" y="382" fill="#065f46">unknown fields</text>
+    <text x="1336" y="382" fill="#047857" text-anchor="end">kept as unmapped</text>
   </g>
 
-  <g>
-    <rect x="424" y="150" width="14" height="330" rx="4" fill="#e2e8f0" stroke="#94a3b8"/>
-    <text x="462" y="176" font-size="13" font-weight="600" fill="#111827">RS485 bus, terminals A and B</text>
-    <text x="462" y="200" font-size="11.5" fill="#475569">one master, the router, three slaves</text>
-    <text x="462" y="218" font-size="11.5" fill="#475569">9600 baud, 8 data bits, no parity</text>
-    <text x="462" y="236" font-size="11.5" fill="#475569">one stop bit, flow control off, half duplex</text>
-    <text x="462" y="254" font-size="11.5" fill="#475569">common ground shared by every device</text>
-    <text x="462" y="286" font-size="11.5" fill="#94a3b8">port /dev/rs485, exposed as /dev/ttyS1</text>
-    <text x="462" y="304" font-size="11.5" fill="#94a3b8">each server polled every 20 seconds</text>
+  <!-- platform: zabbix -->
+  <rect x="1016" y="440" width="336" height="120" rx="8" fill="#ecfdf5" stroke="#6ee7b7"/>
+  <text x="1032" y="468" font-size="16" font-weight="600" fill="#064e3b">Zabbix 7.4</text>
+  <text x="1032" y="488" font-size="12" fill="#047857">one host per device serial</text>
+  <line x1="1032" y1="500" x2="1336" y2="500" stroke="#6ee7b7"/>
+  <g font-size="12">
+    <text x="1032" y="524" fill="#065f46">items</text>
+    <text x="1336" y="524" fill="#047857" text-anchor="end">12 trapper items, numeric</text>
+    <text x="1032" y="548" fill="#065f46">history</text>
+    <text x="1336" y="548" fill="#047857" text-anchor="end">charts, rollups, reports</text>
   </g>
 
-  <g>
-    <rect x="800" y="150" width="204" height="330" rx="12" fill="#eef2ff" stroke="#4f46e5"/>
-    <text x="818" y="180" font-size="16" font-weight="600" fill="#312e81">Teltonika RUT906</text>
-    <line x1="818" y1="192" x2="986" y2="192" stroke="#c7d2fe"/>
-    <text x="818" y="214" font-size="12" font-weight="600" fill="#312e81">1 Modbus client</text>
-    <text x="818" y="232" font-size="11.5" fill="#3730a3">polls three servers</text>
-    <text x="818" y="258" font-size="12" font-weight="600" fill="#312e81">2 Combined input</text>
-    <text x="818" y="276" font-size="11.5" fill="#3730a3">twelve fields, one payload</text>
-    <text x="818" y="302" font-size="12" font-weight="600" fill="#312e81">3 Lua formatter</text>
-    <text x="818" y="320" font-size="11.5" fill="#3730a3">applies the scale factors,</text>
-    <text x="818" y="336" font-size="11.5" fill="#3730a3">adds site id, serial, epoch</text>
-    <text x="818" y="362" font-size="12" font-weight="600" fill="#312e81">4 Publish every 20 s</text>
-    <text x="818" y="380" font-size="11.5" fill="#3730a3">MQTT over TLS, port 8883</text>
-    <text x="818" y="396" font-size="11.5" fill="#3730a3">or HTTPS to the ingest API</text>
-    <text x="818" y="422" font-size="12" font-weight="600" fill="#312e81">On the device</text>
-    <text x="818" y="440" font-size="11.5" fill="#3730a3">MQTT output configured</text>
-    <text x="818" y="456" font-size="11.5" fill="#3730a3">and currently disabled, so</text>
-    <text x="818" y="472" font-size="11.5" fill="#3730a3">HTTPS carries telemetry</text>
+  <!-- platform: operator -->
+  <rect x="1016" y="592" width="336" height="216" rx="8" fill="#ecfdf5" stroke="#6ee7b7"/>
+  <text x="1032" y="620" font-size="16" font-weight="600" fill="#064e3b">Operator browser</text>
+  <text x="1032" y="640" font-size="12" fill="#047857">single ingress, authenticated session</text>
+  <line x1="1032" y1="652" x2="1336" y2="652" stroke="#6ee7b7"/>
+  <g font-size="12">
+    <text x="1032" y="678" fill="#065f46">dashboard</text>
+    <text x="1336" y="678" fill="#047857" text-anchor="end">fleet state, live tiles, alarms</text>
+    <text x="1032" y="702" fill="#065f46">monitoring</text>
+    <text x="1336" y="702" fill="#047857" text-anchor="end">charts per metric with ranges</text>
+    <text x="1032" y="726" fill="#065f46">reports</text>
+    <text x="1336" y="726" fill="#047857" text-anchor="end">XLSX export and print view</text>
+    <text x="1032" y="750" fill="#065f46">remote access</text>
+    <text x="1336" y="750" fill="#047857" text-anchor="end">native WebUI and SSH console</text>
   </g>
+  <line x1="1032" y1="766" x2="1336" y2="766" stroke="#6ee7b7"/>
+  <text x="1032" y="790" font-size="12" fill="#047857">targets resolve server side from the registry</text>
 
-  <g>
-    <rect x="1044" y="150" width="164" height="330" rx="12" fill="#ecfdf5" stroke="#059669"/>
-    <text x="1060" y="180" font-size="15" font-weight="600" fill="#064e3b">TELNUSA NMS</text>
-    <line x1="1060" y1="192" x2="1192" y2="192" stroke="#a7f3d0"/>
-    <text x="1060" y="214" font-size="11.5" fill="#065f46">validates identity,</text>
-    <text x="1060" y="230" font-size="11.5" fill="#065f46">time and ranges</text>
-    <text x="1060" y="254" font-size="11.5" fill="#065f46">registers the device</text>
-    <text x="1060" y="278" font-size="11.5" fill="#065f46">queues for Zabbix</text>
-    <text x="1060" y="302" font-size="11.5" fill="#065f46">keeps latest state</text>
-    <text x="1060" y="326" font-size="11.5" fill="#065f46">publishes live updates</text>
-    <text x="1060" y="350" font-size="11.5" fill="#065f46">evaluates alarm rules</text>
-    <line x1="1060" y1="368" x2="1192" y2="368" stroke="#a7f3d0"/>
-    <text x="1060" y="390" font-size="11.5" fill="#065f46">Zabbix 7.4 stores</text>
-    <text x="1060" y="406" font-size="11.5" fill="#065f46">history and problems</text>
-    <text x="1060" y="430" font-size="11.5" fill="#065f46">the API serves ranges,</text>
-    <text x="1060" y="446" font-size="11.5" fill="#065f46">rollups and reports</text>
-    <text x="1060" y="470" font-size="11.5" fill="#065f46">remote access stays</text>
-    <text x="1060" y="486" font-size="11.5" fill="#065f46">server side and audited</text>
-  </g>
+  <!-- cross band link -->
+  <line x1="904" y1="368" x2="1008" y2="368" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <text x="956" y="350" font-size="12" fill="#475569" text-anchor="middle">HTTPS</text>
+  <text x="956" y="386" font-size="12" fill="#475569" text-anchor="middle">20 s</text>
 
-  <path d="M 384 172 H 414" stroke="#4b5563" stroke-width="2" fill="none"/>
-  <path d="M 384 336 H 414" stroke="#4b5563" stroke-width="2" fill="none"/>
-  <path d="M 384 492 H 414" stroke="#4b5563" stroke-width="2" fill="none"/>
-  <path d="M 438 315 H 790" stroke="#4b5563" stroke-width="2" fill="none"/>
-  <path d="M 1004 315 H 1034" stroke="#4b5563" stroke-width="2" fill="none"/>
-  <text x="560" y="306" font-size="11" fill="#6b7280">Modbus RTU requests</text>
-  <text x="880" y="306" font-size="11" fill="#6b7280">published payload</text>
+  <!-- platform links: writes and reads as two separate flows -->
+  <line x1="1072" y1="408" x2="1072" y2="436" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <text x="1088" y="428" font-size="12" fill="#475569">write</text>
+  <line x1="1140" y1="440" x2="1140" y2="412" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <text x="1156" y="428" font-size="12" fill="#475569">read</text>
+  <line x1="1072" y1="560" x2="1072" y2="588" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <text x="1088" y="580" font-size="12" fill="#475569">serve</text>
+  <line x1="1140" y1="592" x2="1140" y2="564" stroke="#475569" stroke-width="2" marker-end="url(#flow)"/>
+  <text x="1156" y="580" font-size="12" fill="#475569">query</text>
 
-  <text x="32" y="592" font-size="12" fill="#6b7280">Sensor mapping is data, not code: unit id, function code, register offsets and a scale factor per field.</text>
-  <text x="32" y="612" font-size="12" fill="#6b7280">A sensor that is not wired or not verified stays out of the contract, and its readings render as NO DATA.</text>
-  <text x="32" y="638" font-size="11.5" fill="#9ca3af">Reference device: Teltonika RUT906, firmware branch RUT9M_R_00.07.24.x, RS485 on /dev/rs485.</text>
+  <!-- footer: metadata -->
+  <line x1="32" y1="856" x2="1368" y2="856" stroke="#d1d5db"/>
+  <text x="32" y="880" font-size="12" fill="#6b7280">Source: commissioned installation, router configuration and Zabbix items read on 22 October 2026. Version 2.</text>
+  <text x="1368" y="880" font-size="12" fill="#6b7280" text-anchor="end">Reference device Teltonika RUT906, firmware branch RUT9M_R_00.07.24.x.</text>
 </svg>
