@@ -84,7 +84,7 @@ export async function apiFetch<T>(
 
   if (res.status === 401) {
     // Session expired or not authenticated: redirect to login if enabled
-    // NEVER silently fall back to mock data or unauthenticated state
+    // Never silently fall back to mock data or an unauthenticated state
     if (redirectOn401 && typeof window !== "undefined" && window.location) {
       window.location.href = "/login";
     }
