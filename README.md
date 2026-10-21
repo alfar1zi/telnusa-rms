@@ -31,6 +31,43 @@ serves another dashboard.
   overlay network. The same policy covers the native WebUI (reverse proxied in an
   iframe) and the SSH console (through Guacamole).
 
+## Screenshots
+
+Captured from the portal running in development data mode, so the numbers are
+deterministic fixtures rather than field readings.
+
+### Operations dashboard
+
+![Operations dashboard](docs/images/dashboard-overview.png)
+
+Fleet state, instantaneous PV generation, accumulated energy, both sensor groups
+and the recent event feed on one screen.
+
+### Telemetry analytics
+
+![Telemetry analytics](docs/images/monitoring-chart.png)
+
+Per-metric charts with an explicit range, resolution and data-quality header. An
+unintegrated or silent source is stated as such instead of being drawn as zero.
+
+### Devices
+
+![Device list](docs/images/devices-table.png)
+
+### Device detail
+
+![Device detail charts](docs/images/device-detail-charts.png)
+
+### Reports and export
+
+![Report chart](docs/images/reports-chart.png)
+
+Metric selection, period, per-metric charts and the XLSX / CSV / print outputs.
+
+### Alarms
+
+![Alarm table](docs/images/alarms-table.png)
+
 ## Architecture
 
 ```mermaid
@@ -79,6 +116,7 @@ backend/             Python API, collector, processors, Zabbix client, store, te
 ops/grafana/         Grafana provisioning: data source and the overview dashboard
 deploy/, deployment/ Apache virtual host, systemd unit, tunnel configuration
 scripts/             Deployment, packaging and device operations helpers
+docs/images/         Screenshots and the installation diagram used in this document
 public/              Self-hosted Inter webfont and static assets
 ```
 
@@ -113,6 +151,87 @@ rut.pzem.energy.kwh
 
 Zabbix host identity is deterministic: `RUT-<serial>`. Items belong to one
 template; reconciliation never duplicates a host.
+
+## Field installation: RUT906 with three sensors
+
+![Installation diagram](docs/images/installation-rut906.svg)
+
+The reference site is one Teltonika RUT906 (RUT9M family) polling two Modbus
+devices on a single RS485 bus. The router itself performs the polling and the
+formatting, so the platform receives ready values rather than raw registers.
+
+![Teltonika RUT906](docs/images/rut906.png)
+
+*Device image: Teltonika Networks. The router exposes the Ethernet ports, the
+digital inputs and the RS485 terminals used below.*
+
+### Bus and wiring
+
+| Parameter | Value |
+| --- | --- |
+| Interface | RS485 on `/dev/rs485` (mapped to `/dev/ttyS1`) |
+| Serial format | 9600 baud, 8 data bits, no parity, 1 stop bit |
+| Flow control | Off; the bus runs half duplex |
+| Topology | Two-wire bus, one master (the router), two slaves |
+| Signals | A (+), B (−) and a common ground reference |
+
+### Sensor 1 — MPPT solar charge controller (IPANDEE)
+
+| Field | Register | Scaling | Metric key |
+| --- | --- | --- | --- |
+| `pv_voltage` | 2 | ÷ 10 → V | `rut.mppt.pv.v` |
+| `charging_current` | 4 | ÷ 10 → A | `rut.mppt.pv.a` |
+| `output_voltage` | 5 | ÷ 10 → V | `rut.mppt.out.v` |
+| `load_current` | 7 | ÷ 10 → A | `rut.mppt.out.a` |
+
+Modbus RTU, unit id 2. These four values are the DC side of the installation: what
+the array produces, and what the controller passes to the load.
+
+### Sensor 2 — three-phase energy meter (PZEM-6L24)
+
+| Field | Register | Scaling | Metric key |
+| --- | --- | --- | --- |
+| `a_voltage` | 1 | ÷ 10 → V | `rut.pzem.a.voltage` |
+| `b_voltage` | 2 | ÷ 10 → V | `rut.pzem.b.voltage` |
+| `c_voltage` | 3 | ÷ 10 → V | `rut.pzem.c.voltage` |
+| `a_current` | 4 | ÷ 100 → A | `rut.pzem.a.current` |
+| `b_current` | 5 | ÷ 100 → A | `rut.pzem.b.current` |
+| `c_current` | 6 | ÷ 100 → A | `rut.pzem.c.current` |
+| `kwh` | 59 (two registers) | scale to be validated | `rut.pzem.energy.kwh` |
+
+Modbus RTU, unit id 1, function code 04 (input registers). This is the AC side: the
+three phase voltages and load currents, plus the accumulated energy counter.
+
+The energy counter is deliberately not treated as billing grade. The register pair
+is stored as read, and the scale factor must be confirmed against a reference meter
+before any figure derived from it is trusted.
+
+### Sensor 3 — solar irradiance: NOT INTEGRATED
+
+The irradiance reading is part of the design, but it is **not** wired into the
+telemetry map, because two references describe it differently:
+
+- one drawing shows a Modbus RS485 device with a possible slave id 3;
+- another document describes an analog output (4–20 mA or 0–10 V).
+
+Model, interface, address and scaling therefore remain unverified. Until they are
+confirmed on the bench, the metric stays out of the contract and the UI renders the
+field as `NO DATA` with the state `NOT INTEGRATED`. Guessing a protocol, a register
+or a scale factor here would produce a number that looks plausible and means
+nothing, which is worse than an explicit gap.
+
+### On the router
+
+| Step | Detail |
+| --- | --- |
+| 1 · Modbus client | Polls both units; the cached values land in the device's Modbus database |
+| 2 · Data Sender input | One combined input with eleven requests: the four MPPT fields and the seven PZEM fields |
+| 3 · Lua formatter | Emits the payload identity (site id, serial, epoch seconds) with numeric sanity per field |
+| 4 · Data Sender output | Publishes every 20 s over MQTT TLS (port 8883) or HTTPS to the ingest endpoint |
+
+Verified on the bench: bus parameters, unit ids, both register maps and the
+transport. Not verified: the kWh scale factor, the irradiance sensor, and the
+broker-side credentials of the production MQTT leg.
 
 ## Sensors and scaling
 
