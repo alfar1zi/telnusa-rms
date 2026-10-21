@@ -94,7 +94,7 @@ const slice: Dict = {
   "deviceDetails.field.edgeUptime": "Edge Uptime",
   "deviceDetails.field.senderPeriod": "Data Sender Period",
   "deviceDetails.field.healthSource": "Health Source Integration",
-  "deviceDetails.value.serialInterface": "/dev/rs485 → /dev/ttyS1",
+  "deviceDetails.value.serialInterface": "/dev/rs485, port /dev/ttyS1",
   "deviceDetails.value.baudRate": "9600 bps, 8N1, No Parity",
   "deviceDetails.value.mpptUnit": "Unit ID: 2 (IPANDEE)",
   "deviceDetails.value.meterUnit": "Unit ID: 1, FC04 (PZEM-6L24)",

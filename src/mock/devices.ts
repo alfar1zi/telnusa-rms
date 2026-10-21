@@ -20,7 +20,7 @@ export const MOCK_DEVICES: Device[] = [
     dataAge:      "fresh",
     mpptState:    "ok",
     pzemState:    "ok",
-    sensor3State: "not_installed",
+    sensor3State: "ok",
   },
   {
     id:           "RUT-TEST-002",
@@ -37,7 +37,7 @@ export const MOCK_DEVICES: Device[] = [
     dataAge:      "fresh",
     mpptState:    "ok",
     pzemState:    "ok",
-    sensor3State: "not_installed",
+    sensor3State: "ok",
   },
   {
     id:           "RUT-TEST-003",
@@ -54,7 +54,7 @@ export const MOCK_DEVICES: Device[] = [
     dataAge:      "no_data",
     mpptState:    "no_data",
     pzemState:    "no_data",
-    sensor3State: "not_installed",
+    sensor3State: "no_data",
   },
   {
     id:           "RUT-TEST-004",
@@ -71,6 +71,6 @@ export const MOCK_DEVICES: Device[] = [
     dataAge:      "stale",
     mpptState:    "ok",
     pzemState:    "warning",
-    sensor3State: "not_installed",
+    sensor3State: "ok",
   },
 ];

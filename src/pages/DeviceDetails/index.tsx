@@ -290,7 +290,7 @@ export default function DeviceDetails() {
           <TabsTrigger value="remote" className="text-xs">{t("deviceDetails.tab.remote")}</TabsTrigger>
         </TabsList>
 
-        {/* ── 1. Overview ── */}
+        {/*  1. Overview  */}
         <TabsContent value="overview" className="space-y-6">
           {/* Quick KPI Trio */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -383,7 +383,7 @@ export default function DeviceDetails() {
           </div>
         </TabsContent>
 
-        {/* ── 2. Solar & MPPT Power ── */}
+        {/*  2. Solar & MPPT Power  */}
         <TabsContent value="power" className="space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
@@ -414,7 +414,7 @@ export default function DeviceDetails() {
           </div>
         </TabsContent>
 
-        {/* ── 3. AC & Energy ── */}
+        {/*  3. AC & Energy  */}
         <TabsContent value="energy" className="space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
@@ -469,7 +469,7 @@ export default function DeviceDetails() {
           </div>
         </TabsContent>
 
-        {/* ── 4. Diagnostics & Modbus Configuration ── */}
+        {/*  4. Diagnostics & Modbus Configuration  */}
         <TabsContent value="diagnostics" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Modbus Network Map */}
@@ -523,7 +523,7 @@ export default function DeviceDetails() {
           </div>
         </TabsContent>
 
-        {/* ── 5. Alarms & Events ── */}
+        {/*  5. Alarms & Events  */}
         <TabsContent value="alarms" className="space-y-6">
           <div className="space-y-4">
             <div className="rounded-xl border border-border bg-card p-5 shadow-sm space-y-3">
@@ -538,7 +538,7 @@ export default function DeviceDetails() {
           </div>
         </TabsContent>
 
-        {/* ── 6. Remote Access ── */}
+        {/*  6. Remote Access  */}
         <TabsContent value="remote">
           <RemoteAccessCard deviceId={deviceId!} />
         </TabsContent>

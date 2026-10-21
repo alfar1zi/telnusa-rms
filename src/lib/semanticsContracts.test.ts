@@ -23,7 +23,7 @@ import {
   metricStateLabel,
 } from "./telemetrySemantics.ts";
 
-// ─────────────────────────────────────────────── canonical event type
+// canonical event type
 
 test(" every canonical type has a non-blank label", () => {
   const types = [
@@ -78,7 +78,7 @@ test(" an event with no name never renders a blank message cell", () => {
   }
 });
 
-// ─────────────────────────────────── metric states: the four distinct facts
+// metric states: the four distinct facts
 
 test("all four metric states exist and are labelled", () => {
   const states = ["not_integrated", "no_data_in_range", "data", "error"] as const;
@@ -130,7 +130,7 @@ test("an unintegrated metric never says 'no data for selected time range'", () =
   }
 });
 
-// ──────────────────────────────────────────────────── source state
+// source state
 
 test(" a declared state is returned verbatim", () => {
   for (const s of ["not_integrated", "available", "no_data", "error"] as const) {

@@ -18,7 +18,7 @@ function wave(i: number, base: number, amp: number, freq: number, phase = 0): nu
   return base + amp * Math.sin((i / POINTS) * Math.PI * freq + phase);
 }
 
-// ── RUT-TEST-001: healthy, stable ──────────────────────────────────────────
+// RUT-TEST-001: healthy, stable
 const health001: DeviceHealthHistory = {
   deviceId: "RUT-TEST-001",
   cpu:         buildHealthSeries((i) => parseFloat(wave(i, 32, 12, 2, 0).toFixed(1))),
@@ -40,7 +40,7 @@ const snapshot001: DeviceHealthSnapshot = {
   lastTelemetryAge: 42,
 };
 
-// ── RUT-TEST-002: online with warning, high CPU/RAM ──────────────────────
+// RUT-TEST-002: online with warning, high CPU/RAM
 const health002: DeviceHealthHistory = {
   deviceId: "RUT-TEST-002",
   cpu:         buildHealthSeries((i) => {
@@ -69,7 +69,7 @@ const snapshot002: DeviceHealthSnapshot = {
   lastTelemetryAge: 65,
 };
 
-// ── RUT-TEST-003: offline/critical, history only up to hour 8 ────────────
+// RUT-TEST-003: offline/critical, history only up to hour 8
 // Went offline at 08:00 (i=16). Remaining points zeroed (no data).
 const health003: DeviceHealthHistory = {
   deviceId: "RUT-TEST-003",
@@ -101,7 +101,7 @@ const snapshot003: DeviceHealthSnapshot = {
   lastTelemetryAge: 57_600, // ~16 h since last successful reading
 };
 
-// ── RUT-TEST-004: online, degraded connectivity with weak RSSI ───────────────
+// RUT-TEST-004: online, degraded connectivity with weak RSSI
 const health004: DeviceHealthHistory = {
   deviceId: "RUT-TEST-004",
   cpu:         buildHealthSeries((i) => parseFloat(wave(i, 38, 10, 2, 0.7).toFixed(1))),

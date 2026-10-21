@@ -58,8 +58,8 @@ const alarms: Dict = {
   // Engine rules tab
   "alarms.rules.enabled": "ENABLED",
   "alarms.rules.disabled": "DISABLED",
-  "alarms.rules.summary": "Rule ID: {id} • Metric: {metric} {operator} {threshold} (scope: {pattern})",
-  "alarms.rules.schedule": "Interval: {interval}s • Consecutive: {consecutive}",
+  "alarms.rules.summary": "Rule ID: {id} - Metric: {metric} {operator} {threshold} (scope: {pattern})",
+  "alarms.rules.schedule": "Interval: {interval}s - Consecutive: {consecutive}",
   "alarms.rules.noThreshold": "NONE",
 
   // Acknowledge / resolve dialog

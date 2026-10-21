@@ -198,7 +198,7 @@ async function runAuth03ErrorTests() {
     ];
 
     for (const tc of testCases) {
-      // 404 → undefined
+      // 404 returns undefined
       globalThis.fetch = async (_input: RequestInfo | URL, _init?: RequestInit) =>
         new Response(JSON.stringify({ error: "Not found" }), {
           status: 404,
@@ -206,9 +206,9 @@ async function runAuth03ErrorTests() {
         });
 
       const result404 = await tc.fn(deviceId);
-      assert(result404 === undefined, `${tc.name}: 404 → undefined`);
+      assert(result404 === undefined, `${tc.name}: 404 returns undefined`);
 
-      // 401/403/429/500/501/503 → propagated error
+      // 401, 403, 429, 500, 501 and 503 propagate the error
       for (const [status, errorName] of [
         [401, "AuthError"],
         [403, "ForbiddenError"],
@@ -230,7 +230,7 @@ async function runAuth03ErrorTests() {
           if (err instanceof ApiError || err instanceof AuthError || err instanceof ForbiddenError) {
             caught = true;
             if (status !== 401 && status !== 403) {
-              assert(err.status === status, `${tc.name}: ${status} → ApiError.status === ${status}`);
+              assert(err.status === status, `${tc.name}: ${status}: ApiError.status is ${status}`);
             }
           } else throw err;
         }

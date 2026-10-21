@@ -4199,18 +4199,18 @@ from backend.telemetry import parse_json_payload, ValidationError
 
 def test_http_ingest_valid_telemetry():
     store = Store(":memory:")
-    
+
     original = config.NMS_TELEMETRY_INGEST_ENABLED
     config.NMS_TELEMETRY_INGEST_ENABLED = True
-    
+
     try:
         payload = base_payload(sps_mppt_pv_v=23.4, sps_mppt_pv_a=5.2, kwh=123.45, ts=int(time.time() * 1000))
         status, result = process_payload(store, payload, actor="http")
-        
+
         assert status == 202
         assert result["deviceId"] == "RUT-8800000001"
         assert "unmapped" in result
-        
+
         # Check device was created
         device = store.get_device("RUT-8800000001")
         assert device is not None
@@ -4229,74 +4229,74 @@ def test_http_ingest_invalid_json():
 
 def test_http_ingest_missing_identity():
     store = Store(":memory:")
-    
+
     payload = base_payload()
     del payload["site_id"]
-    
+
     status, result = process_payload(store, payload, actor="http")
     assert status == 400
     assert result["error"] == "validation_failed"
 
 def test_http_ingest_missing_sn():
     store = Store(":memory:")
-    
+
     payload = base_payload()
     del payload["sn"]
-    
+
     status, result = process_payload(store, payload, actor="http")
     assert status == 400
     assert result["error"] == "validation_failed"
 
 def test_http_ingest_missing_ts():
     store = Store(":memory:")
-    
+
     payload = base_payload()
     del payload["ts"]
-    
+
     status, result = process_payload(store, payload, actor="http")
     assert status == 400
     assert result["error"] == "validation_failed"
 
 def test_http_ingest_invalid_timestamp_future():
     store = Store(":memory:")
-    
+
     future_ts = int(time.time() * 1000) + 400_000  # 400 seconds in future
     payload = base_payload(ts=future_ts)
-    
+
     status, result = process_payload(store, payload, actor="http", received_ms=int(time.time() * 1000))
     assert status == 400
     assert result["error"] == "validation_failed"
 
 def test_http_ingest_invalid_timestamp_past():
     store = Store(":memory:")
-    
+
     payload = base_payload(ts=1000)
-    
+
     status, result = process_payload(store, payload, actor="http")
     assert status == 400
     assert result["error"] == "validation_failed"
 
 def test_http_ingest_unknown_field():
     store = Store(":memory:")
-    
+
     payload = base_payload(unknown_field=999)
-    
+
     status, result = process_payload(store, payload, actor="http")
     assert status == 202
     assert "unknown_field" in result["unmapped"]
-    
+
     # Check unmapped was recorded
     unmapped = store.list_unmapped()
     assert any(u["field"] == "unknown_field" for u in unmapped)
 
 def test_http_ingest_null_sensor_values():
     store = Store(":memory:")
-    
+
     payload = base_payload(sps_mppt_pv_v=None, kwh=None)
-    
+
     status, result = process_payload(store, payload, actor="http")
     assert status == 202
-    
+
     device = store.get_device("RUT-8800000001")
     latest = device["last_payload"]
     assert latest["mppt"]["pvVoltage"] is None
@@ -4311,39 +4311,39 @@ def test_http_ingest_disabled():
 
 def test_http_ingest_device_discovery_upsert():
     store = Store(":memory:")
-    
+
     payload1 = base_payload(sps_mppt_pv_v=23.4)
     status1, result1 = process_payload(store, payload1, actor="http")
-    
+
     assert status1 == 202
     assert result1["deviceId"] == "RUT-8800000001"
-    
+
     # Send again - should be deduplicated
     status2, result2 = process_payload(store, payload1, actor="http")
-    
+
     assert status2 == 202
     assert result2["duplicate"] is True
-    
+
     # Device count should be 1
     devices = store.list_devices()
     assert len(devices) == 1
 
 def test_http_ingest_response_codes():
     store = Store(":memory:")
-    
+
     # Valid payload -> 202
     payload = base_payload()
     status, result = process_payload(store, payload, actor="http")
     assert status == 202
     assert "deviceId" in result
     assert "unmapped" in result
-    
+
     # Invalid payload -> 400
     payload_bad = base_payload(site_id="")
     status, result = process_payload(store, payload_bad, actor="http")
     assert status == 400
     assert result["error"] == "validation_failed"
-    
+
     # Duplicate -> 202 with duplicate flag
     status, result = process_payload(store, payload, actor="http")
     assert status == 202
@@ -4361,12 +4361,12 @@ def test_http_ingest_content_type():
 
 def test_http_ingest_actor_audit():
     store = Store(":memory:")
-    
+
     payload = base_payload()
     status, result = process_payload(store, payload, actor="http")
-    
+
     assert status == 202
-    
+
     # Check audit log has "http" actor
     audits = store.list_audit_logs(limit=10)
     assert any(a["actor"] == "http" for a in audits)
@@ -4551,15 +4551,15 @@ def stop_test_server(server, thread):
 def test_http_ingest_handler_valid():
     """Test valid telemetry via actual HTTP handler."""
     server, port, thread = start_test_server()
-    
+
     original_enabled = config.NMS_TELEMETRY_INGEST_ENABLED
     original_token = config.NMS_TELEMETRY_INGEST_TOKEN
     config.NMS_TELEMETRY_INGEST_ENABLED = True
     config.NMS_TELEMETRY_INGEST_TOKEN = "test-token-123"
-    
+
     try:
         conn = HTTPConnection("127.0.0.1", port, timeout=5)
-        
+
         payload = {
             "site_id": "SITE-A",
             "sn": "8800000001",
@@ -4567,20 +4567,20 @@ def test_http_ingest_handler_valid():
             "sps_mppt_pv_v": 23.4,
             "sps_mppt_pv_a": 5.2
         }
-        
+
         headers = {
             "Content-Type": "application/json",
             "Authorization": "Bearer test-token-123"
         }
-        
+
         conn.request("POST", "/api/telemetry/ingest", json.dumps(payload), headers)
         resp = conn.getresponse()
         body = json.loads(resp.read().decode())
-        
+
         assert resp.status == 202, f"Expected 202, got {resp.status}: {body}"
         assert body["deviceId"] == "RUT-8800000001"
         assert "unmapped" in body
-        
+
         conn.close()
     finally:
         config.NMS_TELEMETRY_INGEST_ENABLED = original_enabled
@@ -4590,24 +4590,24 @@ def test_http_ingest_handler_valid():
 def test_http_ingest_handler_invalid_token():
     """Test invalid token."""
     server, port, thread = start_test_server()
-    
+
     original_enabled = config.NMS_TELEMETRY_INGEST_ENABLED
     original_token = config.NMS_TELEMETRY_INGEST_TOKEN
     config.NMS_TELEMETRY_INGEST_ENABLED = True
     config.NMS_TELEMETRY_INGEST_TOKEN = "test-token-123"
-    
+
     try:
         conn = HTTPConnection("127.0.0.1", port, timeout=5)
-        
+
         payload = {"site_id": "SITE-A", "sn": "8800000001", "ts": int(time.time() * 1000)}
         headers = {"Content-Type": "application/json", "Authorization": "Bearer wrong-token"}
-        
+
         conn.request("POST", "/api/telemetry/ingest", json.dumps(payload), headers)
         resp = conn.getresponse()
         body = json.loads(resp.read().decode())
-        
+
         assert resp.status == 401, f"Expected 401, got {resp.status}: {body}"
-        
+
         conn.close()
     finally:
         config.NMS_TELEMETRY_INGEST_ENABLED = original_enabled
@@ -4617,24 +4617,24 @@ def test_http_ingest_handler_invalid_token():
 def test_http_ingest_handler_no_token():
     """Test missing token."""
     server, port, thread = start_test_server()
-    
+
     original_enabled = config.NMS_TELEMETRY_INGEST_ENABLED
     original_token = config.NMS_TELEMETRY_INGEST_TOKEN
     config.NMS_TELEMETRY_INGEST_ENABLED = True
     config.NMS_TELEMETRY_INGEST_TOKEN = "test-token-123"
-    
+
     try:
         conn = HTTPConnection("127.0.0.1", port, timeout=5)
-        
+
         payload = {"site_id": "SITE-A", "sn": "8800000001", "ts": int(time.time() * 1000)}
         headers = {"Content-Type": "application/json"}
-        
+
         conn.request("POST", "/api/telemetry/ingest", json.dumps(payload), headers)
         resp = conn.getresponse()
         body = json.loads(resp.read().decode())
-        
+
         assert resp.status == 401, f"Expected 401, got {resp.status}: {body}"
-        
+
         conn.close()
     finally:
         config.NMS_TELEMETRY_INGEST_ENABLED = original_enabled
@@ -4644,24 +4644,24 @@ def test_http_ingest_handler_no_token():
 def test_http_ingest_handler_disabled():
     """Test disabled endpoint."""
     server, port, thread = start_test_server()
-    
+
     original_enabled = config.NMS_TELEMETRY_INGEST_ENABLED
     original_token = config.NMS_TELEMETRY_INGEST_TOKEN
     config.NMS_TELEMETRY_INGEST_ENABLED = False
     config.NMS_TELEMETRY_INGEST_TOKEN = "test-token-123"
-    
+
     try:
         conn = HTTPConnection("127.0.0.1", port, timeout=5)
-        
+
         payload = {"site_id": "SITE-A", "sn": "8800000001", "ts": int(time.time() * 1000)}
         headers = {"Content-Type": "application/json", "Authorization": "Bearer test-token-123"}
-        
+
         conn.request("POST", "/api/telemetry/ingest", json.dumps(payload), headers)
         resp = conn.getresponse()
         body = json.loads(resp.read().decode())
-        
+
         assert resp.status == 501, f"Expected 501, got {resp.status}: {body}"
-        
+
         conn.close()
     finally:
         config.NMS_TELEMETRY_INGEST_ENABLED = original_enabled
@@ -4671,24 +4671,24 @@ def test_http_ingest_handler_disabled():
 def test_http_ingest_handler_invalid_json():
     """Test invalid JSON."""
     server, port, thread = start_test_server()
-    
+
     original_enabled = config.NMS_TELEMETRY_INGEST_ENABLED
     original_token = config.NMS_TELEMETRY_INGEST_TOKEN
     config.NMS_TELEMETRY_INGEST_ENABLED = True
     config.NMS_TELEMETRY_INGEST_TOKEN = "test-token-123"
-    
+
     try:
         conn = HTTPConnection("127.0.0.1", port, timeout=5)
-        
+
         payload = "not valid json"
         headers = {"Content-Type": "application/json", "Authorization": "Bearer test-token-123"}
-        
+
         conn.request("POST", "/api/telemetry/ingest", payload, headers)
         resp = conn.getresponse()
         body = json.loads(resp.read().decode())
-        
+
         assert resp.status == 400, f"Expected 400, got {resp.status}: {body}"
-        
+
         conn.close()
     finally:
         config.NMS_TELEMETRY_INGEST_ENABLED = original_enabled
@@ -4698,27 +4698,27 @@ def test_http_ingest_handler_invalid_json():
 def test_http_ingest_handler_oversized_body():
     """Test oversized body."""
     server, port, thread = start_test_server()
-    
+
     original_enabled = config.NMS_TELEMETRY_INGEST_ENABLED
     original_token = config.NMS_TELEMETRY_INGEST_TOKEN
     original_max = config.NMS_TELEMETRY_INGEST_MAX_PAYLOAD_BYTES
-    
+
     config.NMS_TELEMETRY_INGEST_ENABLED = True
     config.NMS_TELEMETRY_INGEST_TOKEN = "test-token-123"
     config.NMS_TELEMETRY_INGEST_MAX_PAYLOAD_BYTES = 100
-    
+
     try:
         conn = HTTPConnection("127.0.0.1", port, timeout=5)
-        
+
         payload = {"site_id": "SITE-A", "sn": "8800000001", "ts": int(time.time() * 1000), "data": "x" * 200}
         headers = {"Content-Type": "application/json", "Authorization": "Bearer test-token-123"}
-        
+
         conn.request("POST", "/api/telemetry/ingest", json.dumps(payload), headers)
         resp = conn.getresponse()
         body = json.loads(resp.read().decode())
-        
+
         assert resp.status == 413, f"Expected 413, got {resp.status}: {body}"
-        
+
         conn.close()
     finally:
         config.NMS_TELEMETRY_INGEST_ENABLED = original_enabled
@@ -4729,25 +4729,25 @@ def test_http_ingest_handler_oversized_body():
 def test_http_ingest_handler_invalid_identity():
     """Test invalid identity fields."""
     server, port, thread = start_test_server()
-    
+
     original_enabled = config.NMS_TELEMETRY_INGEST_ENABLED
     original_token = config.NMS_TELEMETRY_INGEST_TOKEN
     config.NMS_TELEMETRY_INGEST_ENABLED = True
     config.NMS_TELEMETRY_INGEST_TOKEN = "test-token-123"
-    
+
     try:
         conn = HTTPConnection("127.0.0.1", port, timeout=5)
-        
+
         payload = {"site_id": "", "sn": "8800000001", "ts": int(time.time() * 1000)}
         headers = {"Content-Type": "application/json", "Authorization": "Bearer test-token-123"}
-        
+
         conn.request("POST", "/api/telemetry/ingest", json.dumps(payload), headers)
         resp = conn.getresponse()
         body = json.loads(resp.read().decode())
-        
+
         assert resp.status == 400, f"Expected 400, got {resp.status}: {body}"
         assert body["error"] == "validation_failed"
-        
+
         conn.close()
     finally:
         config.NMS_TELEMETRY_INGEST_ENABLED = original_enabled
@@ -4757,24 +4757,24 @@ def test_http_ingest_handler_invalid_identity():
 def test_http_ingest_handler_x_telemetry_token():
     """Test X-Telemetry-Token header."""
     server, port, thread = start_test_server()
-    
+
     original_enabled = config.NMS_TELEMETRY_INGEST_ENABLED
     original_token = config.NMS_TELEMETRY_INGEST_TOKEN
     config.NMS_TELEMETRY_INGEST_ENABLED = True
     config.NMS_TELEMETRY_INGEST_TOKEN = "test-token-123"
-    
+
     try:
         conn = HTTPConnection("127.0.0.1", port, timeout=5)
-        
+
         payload = {"site_id": "SITE-A", "sn": "8800000001", "ts": int(time.time() * 1000)}
         headers = {"Content-Type": "application/json", "X-Telemetry-Token": "test-token-123"}
-        
+
         conn.request("POST", "/api/telemetry/ingest", json.dumps(payload), headers)
         resp = conn.getresponse()
         body = json.loads(resp.read().decode())
-        
+
         assert resp.status == 202, f"Expected 202, got {resp.status}: {body}"
-        
+
         conn.close()
     finally:
         config.NMS_TELEMETRY_INGEST_ENABLED = original_enabled
@@ -4893,7 +4893,7 @@ def test_telemetry_route_rejects_inverted_window():
         app_mod.zabbix = original_zabbix
         app_mod.store = original_store
 
-# ── canonical event contract ────────────────────────────────────
+#  canonical event contract
 def test_canonical_event_type_covers_alarm_system_unknown_and_malformed():
     """Every input must land on the canonical set; nothing may escape it."""
     from backend.zabbix_client import (
@@ -4953,7 +4953,7 @@ def test_normalize_event_malformed_partial_event_is_still_a_valid_row():
     assert broken["type"] == "alarm_created"
 
 
-# ── explicit health integration state ────────────────────────
+#  explicit health integration state
 def test_health_payloads_declare_not_integrated_and_invent_no_values():
     """Router resource health has no source: say so explicitly, never fabricate a reading."""
     from backend.app import HEALTH_NOT_INTEGRATED, health_history_unavailable, health_snapshot
@@ -5010,7 +5010,7 @@ def test_health_routes_report_not_integrated_state():
         app_mod.store = original_store
 
 
-# ── metric state: not-integrated vs empty-window vs data ──────────────
+#  metric state: not-integrated vs empty-window vs data
 def test_device_history_reports_metric_state_per_series():
     """An absent item and an empty item are different facts and must differ."""
     from backend.zabbix_client import METRIC_DATA, METRIC_NO_DATA_IN_RANGE, METRIC_NOT_INTEGRATED
@@ -5917,7 +5917,7 @@ def test_r4_alarm_engine_and_lifecycle():
     try:
         store = Store(path)
         engine = AlarmEngine(store)
-        
+
         # 1. Rules seeded
         rules = store.list_alarm_rules()
         assert len(rules) >= 8

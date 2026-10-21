@@ -284,7 +284,7 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* ── FLEET BREAKDOWN: three distributions, one visual vocabulary ── */}
+      {/*  FLEET BREAKDOWN: three distributions, one visual vocabulary  */}
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Card>
           <CardHeader className="p-4 sm:p-5 pb-2">
@@ -353,7 +353,7 @@ export default function Dashboard() {
         </Card>
       </div>
 
-      {/* ── 3-5 SECOND RECOGNITION HERO SECTION ── */}
+      {/*  3-5 SECOND RECOGNITION HERO SECTION  */}
       {selectedDevice && (
         <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
           {/* Hero 1: Site & Operational State */}
@@ -454,7 +454,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ── CONSOLIDATED SUBSYSTEM TELEMETRY (CLEAN NOC GRIDS) ── */}
+      {/*  CONSOLIDATED SUBSYSTEM TELEMETRY (CLEAN NOC GRIDS)  */}
       {selectedDevice && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Subsystem 1: Solar & MPPT Conversion */}
@@ -640,7 +640,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ── ACTIVE ALARMS & RECENT ACTIVITY ── */}
+      {/*  ACTIVE ALARMS & RECENT ACTIVITY  */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Alarms Card */}
         <div className="rounded-xl border border-border bg-card p-5 shadow-sm space-y-3">

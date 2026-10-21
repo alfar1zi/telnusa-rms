@@ -58,8 +58,8 @@ const alarms: Dict = {
   // Tab aturan mesin
   "alarms.rules.enabled": "AKTIF",
   "alarms.rules.disabled": "NONAKTIF",
-  "alarms.rules.summary": "ID Aturan: {id} • Metrik: {metric} {operator} {threshold} (lingkup: {pattern})",
-  "alarms.rules.schedule": "Interval: {interval}s • Berturut-turut: {consecutive}",
+  "alarms.rules.summary": "ID Aturan: {id} - Metrik: {metric} {operator} {threshold} (lingkup: {pattern})",
+  "alarms.rules.schedule": "Interval: {interval}s - Berturut-turut: {consecutive}",
   "alarms.rules.noThreshold": "TIDAK ADA",
 
   // Dialog ACK / selesai

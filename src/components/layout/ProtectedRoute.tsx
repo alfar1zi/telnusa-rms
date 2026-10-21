@@ -3,8 +3,8 @@
  *
  * Works with AuthContext: while session is loading, renders nothing
  * (avoids flash of protected content). Once resolved:
- * - user present → renders children
- * - user null    → redirects to /login
+ * - user present: renders children
+ * - user null: redirects to /login
  *
  * Authorization (role checks) is enforced server-side on every API call.
  * This route guard is a UX convenience, not a security boundary.
