@@ -3438,7 +3438,7 @@ def test_zabbix_delivery_worker_partial_or_failure_result_retention():
         zabbix.sender_submit = lambda values: SenderResult(processed=0, failed=1, total=1, response="failed")
         worker.flush_once()
 
-        # Queue row MUST still exist and attempts incremented
+        # The queue row still exists and the attempt count is incremented
         rows = store.pop_zabbix_batch(10)
         assert len(rows) == 1
         assert rows[0]["attempts"] >= 1
@@ -3451,7 +3451,7 @@ def test_zabbix_delivery_worker_partial_or_failure_result_retention():
         zabbix.sender_submit = lambda values: SenderResult(processed=1, failed=0, total=1, response="success")
         worker.flush_once()
 
-        # Queue row MUST now be deleted
+        # The queue row is now deleted
         rows_after = store.pop_zabbix_batch(10)
         assert len(rows_after) == 0
     finally:

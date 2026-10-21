@@ -58,7 +58,7 @@ export default function Login() {
     }
 
     // Real mode: POST credentials to backend; server issues HttpOnly cookie on success.
-    // NEVER validate credentials in JavaScript.
+    // Credentials are never validated in the browser.
     const form = e.currentTarget;
     const data = new FormData(form);
     try {
