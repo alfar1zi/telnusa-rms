@@ -15,7 +15,7 @@ from typing import Any
 
 logger = logging.getLogger("telnusa.alarm_engine")
 
-# ── DEFAULT SEED RULES ────────────────────────────────────────────────────────
+#  DEFAULT SEED RULES
 # Default infrastructure / data-quality rules are ENABLED by default.
 # Electrical rules (MPPT / PZEM) are DISABLED by default until site engineering limits are approved.
 # Solar radiation has no default rule: irradiance limits are site-specific, so

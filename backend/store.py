@@ -1003,7 +1003,7 @@ class Store:
                 d["metrics"] = {}
         return d
 
-    # ── ALARM RULES CRUD ──────────────────────────────────────────────────────
+    #  ALARM RULES CRUD
 
     def list_alarm_rules(self, enabled_only: bool = False) -> list[dict]:
         with self._lock:
@@ -1042,7 +1042,7 @@ class Store:
         with self._lock, self.db:
             self.db.execute(sql, vals)
 
-    # ── ALARMS LIFECYCLE ──────────────────────────────────────────────────────
+    #  ALARMS LIFECYCLE
 
     def list_alarms(
         self,
@@ -1080,7 +1080,7 @@ class Store:
             FROM alarms a
             LEFT JOIN devices d ON a.device_id = d.device_id
             {where_clause}
-            ORDER BY 
+            ORDER BY
                 CASE WHEN a.state IN ('OPEN', 'ACKNOWLEDGED') THEN 0 ELSE 1 END,
                 a.last_occurrence DESC
             LIMIT ?
@@ -1128,7 +1128,7 @@ class Store:
         with self._lock, self.db:
             existing = self.db.execute(
                 """
-                SELECT * FROM alarms 
+                SELECT * FROM alarms
                 WHERE device_id = ? AND rule_id = ? AND state IN ('OPEN', 'ACKNOWLEDGED')
                 ORDER BY id DESC LIMIT 1
                 """,
@@ -1190,7 +1190,7 @@ class Store:
         with self._lock, self.db:
             existing = self.db.execute(
                 """
-                SELECT * FROM alarms 
+                SELECT * FROM alarms
                 WHERE device_id = ? AND rule_id = ? AND state IN ('OPEN', 'ACKNOWLEDGED')
                 ORDER BY id DESC LIMIT 1
                 """,

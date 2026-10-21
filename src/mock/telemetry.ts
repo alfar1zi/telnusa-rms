@@ -69,6 +69,19 @@ function buildPzemSeries() {
   };
 }
 
+function buildSolarSeries() {
+  // Daylight bell for the pyranometer: zero outside 06:00 to 18:00, peak at midday.
+  const fiveMinutes = INTERVAL_MS / 60_000;
+  return {
+    radiation: buildSeries((i) => {
+      const hour = ((i * fiveMinutes) / 60) % 24;
+      if (hour < 6 || hour >= 18) return 0;
+      const daylight = Math.sin(((hour - 6) / 12) * Math.PI);
+      return parseFloat((daylight * 846).toFixed(1));
+    }),
+  };
+}
+
 export const MOCK_TELEMETRY: DeviceTelemetry = {
   resolution: "hourly",
   // The mock grid is 5 min; stating it keeps the chart's interval note and its
@@ -77,13 +90,14 @@ export const MOCK_TELEMETRY: DeviceTelemetry = {
   deviceId: "RUT-TEST-001",
   mppt: buildMpptSeries(),
   pzem: buildPzemSeries(),
+  solar: buildSolarSeries(),
 };
 
 // Fixed midday snapshot used for dashboard cards and device overview.
-// NOT derived from historical last point (which is 23:55 → solar = 0).
+// NOT derived from historical last point (which is 23:55, so solar = 0).
 export const MOCK_LATEST_TELEMETRY: DeviceLatestTelemetry = {
   deviceId:  "RUT-TEST-001",
-  // Fixed midday snapshot, NOT the last historical point (23:55 → solar = 0)
+  // Fixed midday snapshot, NOT the last historical point (23:55, solar = 0)
   timestamp: new Date("2026-09-22T12:00:00+07:00").getTime(),
   dataAge:   "fresh",
   mppt: {
@@ -100,5 +114,8 @@ export const MOCK_LATEST_TELEMETRY: DeviceLatestTelemetry = {
     phaseBCurrent: 1.1,
     phaseCCurrent: 1.3,
     energy:        12.5,
+  },
+  solar: {
+    radiation: 812.4,
   },
 };

@@ -1,54 +1,24 @@
 # TELNUSA NMS
 
-A self-hosted monitoring dashboard for remote sensor sites. Field devices expose
-telemetry (power, energy, environmental readings) over Modbus; a router forwards it
-over MQTT or HTTPS; the platform stores it in Zabbix, serves it through its own API
-and renders it in an operations-style web UI, including secure remote access to the
-device's own WebUI and SSH console.
-
-The reference deployment targets Teltonika RUT906-class routers with RS485 field
-sensors, but the ingestion contract, the dashboard shell and the deployment layout
-are deliberately generic: swap the sensor map and the labels and the same codebase
-serves another dashboard.
-
-## What it does
-
-- Ingests telemetry from two transports into one validated pipeline: MQTT (TLS) and
-  an authenticated HTTP endpoint for devices that cannot hold an MQTT session.
-- Validates identity, timestamps, numeric sanity and the approved metric set;
-  unknown fields are preserved as unmapped instead of being dropped or invented.
-- Registers devices automatically from valid telemetry and keeps a durable
-  control-plane state (SQLite) for devices, sessions, queue and audit.
-- Queues every reading for Zabbix and drains that queue with bounded retries, so a
-  Zabbix outage delays history without stopping ingestion, latest state or SSE.
-- Serves history, alarms and aggregates from Zabbix history and problems through a
-  small JSON API, and pushes live updates to the browser over Server-Sent Events.
-- Renders a NOC-style portal: dashboard, device list and detail, monitoring charts
-  with explicit time ranges, alarms, reports with multi-metric charts and XLSX
-  export, settings and user management.
-- Provides remote access without exposing the device: the browser talks only to the
-  portal, which maps an authorised session to a trusted device target on a private
-  overlay network. The same policy covers the native WebUI (reverse proxied in an
-  iframe) and the SSH console (through Guacamole).
+Self-hosted monitoring for sensor sites. Field devices speak Modbus over RS485, a
+router publishes the readings, and this platform validates them, stores history in
+Zabbix, serves an API, and renders an operations dashboard with remote access to the
+device's own WebUI and console.
 
 ## Screenshots
 
-Captured from the portal running in development data mode, so the numbers are
-deterministic fixtures rather than field readings.
+Captured from the portal in development data mode, so every number is a fixture.
 
 ### Operations dashboard
 
 ![Operations dashboard](docs/images/dashboard-overview.png)
 
-Fleet state, instantaneous PV generation, accumulated energy, both sensor groups
-and the recent event feed on one screen.
-
 ### Telemetry analytics
 
 ![Telemetry analytics](docs/images/monitoring-chart.png)
 
-Per-metric charts with an explicit range, resolution and data-quality header. An
-unintegrated or silent source is stated as such instead of being drawn as zero.
+One chart per metric, with range, resolution and data quality stated. A silent or
+unintegrated source is labelled instead of drawn as zero.
 
 ### Devices
 
@@ -56,206 +26,185 @@ unintegrated or silent source is stated as such instead of being drawn as zero.
 
 ### Device detail
 
-![Device detail charts](docs/images/device-detail-charts.png)
+![Device detail](docs/images/device-detail-charts.png)
 
-### Reports and export
+### Reports
 
-![Report chart](docs/images/reports-chart.png)
-
-Metric selection, period, per-metric charts and the XLSX / CSV / print outputs.
+![Reports](docs/images/reports-chart.png)
 
 ### Alarms
 
-![Alarm table](docs/images/alarms-table.png)
-
-## Architecture
-
-```mermaid
-flowchart LR
-  S[Sensors on RS485] --> R[Router: Modbus poll and formatter]
-  R -->|MQTT TLS| C[TELNUSA collector]
-  R -->|HTTPS ingest| C
-  C --> V[Validation and device registry]
-  V --> Q[Delivery queue]
-  Q --> Z[Zabbix: history and problems]
-  V --> L[Latest state and SSE]
-  Z --> A[Backend API]
-  L --> A
-  A --> B[Browser dashboard]
-  B -->|authorised session| P[Remote proxy]
-  P --> O[Private overlay network]
-  O --> R
-```
-
-Rules the implementation follows:
-
-- The browser never connects directly to MQTT, the Zabbix API, the database or a
-  field device; every call goes through the backend.
-- Remote targets are resolved server-side from the device registry. The browser
-  never supplies a host or URL, so the proxy cannot be pointed at anything else.
-- Real mode never falls back to mock data. Missing readings render as `NO DATA`,
-  never as a fabricated value.
-- Status vocabulary is explicit: `NOT IMPLEMENTED`, `IMPLEMENTED`, `LOCALLY
-  VERIFIED`, `INTEGRATION READY`, `REAL VERIFIED`, `BLOCKED: EXTERNAL DEPENDENCY`.
+![Alarms](docs/images/alarms-table.png)
 
 ## Stack
 
-| Layer | Technology |
+| Layer | Component |
 | --- | --- |
-| Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, shadcn/Radix primitives, Chart.js with the date-fns time adapter, React Router |
-| Backend | Python standard library only (no web framework), SQLite for control-plane state, background workers for delivery and retention |
-| Monitoring core | Zabbix 7.4 (trapper items, history, problems), Grafana provisioning for dashboards |
-| Remote access | Apache reverse proxy, Guacamole and guacd, private overlay network (ZeroTier) |
-| Devices | Teltonika RUT906: Modbus client, Data Sender with a Lua formatter, MQTT TLS or HTTPS output |
+| Frontend | React 19, TypeScript, Vite, Tailwind CSS v4, Radix primitives, Chart.js with the date-fns adapter, React Router |
+| Backend | Python standard library, SQLite for control-plane state, worker threads for delivery and retention |
+| Monitoring core | Zabbix 7.4, trapper items, history and problems |
+| Dashboards | Grafana 13 with the Zabbix data source, provisioned from `ops/grafana` |
+| Remote access | Apache reverse proxy, Guacamole and guacd, ZeroTier overlay |
+| Device side | Teltonika RUT906, Modbus client, Data Sender with Lua formatters |
+
+## Data path
+
+| Stage | What happens |
+| --- | --- |
+| 1 Sensors | Two Modbus slaves answer on one RS485 bus, 9600 8N1, polled every 20 s |
+| 2 Router | Combines the requested fields into one payload, formats it with Lua, adds site id, serial and epoch seconds |
+| 3 Transport | MQTT over TLS on port 8883, or HTTPS push to the ingest endpoint |
+| 4 Ingest | Identity, timestamp, numeric sanity and metric whitelist are validated, unknown fields are kept as unmapped |
+| 5 State | Device registry, latest state and a durable delivery queue live in SQLite |
+| 6 History | Queued readings become Zabbix trapper values, read back as history and problems |
+| 7 Presentation | The API serves ranges, rollups and reports, and pushes live updates over SSE |
+
+Rules: the browser never reaches MQTT, Zabbix, the database or a device directly.
+Remote targets come from the server-side registry, never from the browser. Real mode
+never falls back to mock data, and a missing reading renders as `NO DATA`.
 
 ## Repository layout
 
-```
-src/                 React application: pages, components, hooks, services, i18n, mock data
-backend/             Python API, collector, processors, Zabbix client, store, tests
-ops/grafana/         Grafana provisioning: data source and the overview dashboard
-deploy/, deployment/ Apache virtual host, systemd unit, tunnel configuration
-scripts/             Deployment, packaging and device operations helpers
-docs/images/         Screenshots and the installation diagram used in this document
-public/              Self-hosted Inter webfont and static assets
-```
+| Path | Content |
+| --- | --- |
+| `src/` | React application: pages, components, hooks, services, i18n, fixtures |
+| `backend/` | API, ingest pipeline, Zabbix client, store, analytics, tests |
+| `ops/grafana/` | Grafana provisioning: data source and overview dashboard |
+| `deploy/`, `deployment/` | Apache virtual host, systemd unit, tunnel configuration |
+| `scripts/` | Deployment, packaging and device operations helpers |
+| `docs/images/` | Screenshots and the installation diagram used in this document |
+| `public/` | Self-hosted Inter webfont and static assets |
 
 ## Backend modules
 
 | Module | Responsibility |
 | --- | --- |
-| `app.py` | HTTP routing, authentication, sessions, CSRF, rate limits, API surface |
-| `store.py` | SQLite schema and access: devices, metrics, latest state, queue, sessions, audit |
+| `app.py` | HTTP routing, sessions, CSRF, rate limits, API surface |
+| `store.py` | SQLite schema and access: devices, latest state, queue, sessions, audit |
 | `telemetry.py` | Payload contract, validation and normalisation |
 | `processor.py` | Ingest pipeline, device registry, alarm evaluation, SSE publication |
-| `zabbix_client.py` | Host and item reconciliation, sender submission, history and problem reads |
-| `rollup.py` | Time-window resolution, downsampling and gap handling for charts |
-| `analytics.py` | Aggregates used by reports and the energy calculations |
+| `zabbix_client.py` | Host and item reconciliation, sender submission, history reads |
+| `rollup.py` | Window resolution, downsampling and gap handling |
+| `analytics.py` | Aggregates for reports and energy calculations |
 | `mqtt_collector.py` | MQTT TLS collector with reconnect and backoff |
-| `remote.py`, `tunnel.py` | Trusted device targets and the private overlay path |
-| `guacamole.py` | Signed, encrypted terminal grants for the SSH console |
-| `xlsx_report.py` | Report workbook builder (values only, unit-aware headers) |
-| `alarm_engine.py` | Alarm rules and severity mapping |
+| `remote.py`, `tunnel.py` | Trusted device targets and the overlay path |
+| `guacamole.py` | Signed terminal grants for the SSH console |
+| `xlsx_report.py` | Report workbook builder |
+| `alarm_engine.py` | Alarm rules, severity mapping and notifications |
 
 ## Telemetry contract
 
-Payload identity: the site id, the device serial and the device epoch timestamp.
-The approved metric keys are numeric trapper contracts in Zabbix:
+Every payload carries the site id, the device serial and the device epoch timestamp.
+Twelve numeric metrics are contracted, all of them Zabbix trapper items:
 
 ```
-rut.mppt.pv.v      rut.mppt.pv.a      rut.mppt.out.v     rut.mppt.out.a
-rut.pzem.a.voltage rut.pzem.b.voltage rut.pzem.c.voltage
-rut.pzem.a.current rut.pzem.b.current rut.pzem.c.current
-rut.pzem.energy.kwh
+rut.mppt.pv.v       rut.mppt.pv.a       rut.mppt.out.v      rut.mppt.out.a
+rut.pzem.a.voltage  rut.pzem.b.voltage  rut.pzem.c.voltage
+rut.pzem.a.current  rut.pzem.b.current  rut.pzem.c.current
+rut.pzem.energy.kwh rut.solar.radiation
 ```
 
-Zabbix host identity is deterministic: `RUT-<serial>`. Items belong to one
-template; reconciliation never duplicates a host.
+Zabbix host identity is `RUT-<serial>`, created once and reconciled, never duplicated.
 
-## Field installation: RUT906 with three sensors
-
-![Installation diagram](docs/images/installation-rut906.svg)
-
-The reference site is one Teltonika RUT906 (RUT9M family) polling two Modbus
-devices on a single RS485 bus. The router itself performs the polling and the
-formatting, so the platform receives ready values rather than raw registers.
+## Field installation: RUT906 and three sensors
 
 ![Teltonika RUT906](docs/images/rut906.png)
 
-*Device image: Teltonika Networks. The router exposes the Ethernet ports, the
-digital inputs and the RS485 terminals used below.*
+*Device image: Teltonika Networks.*
 
-### Bus and wiring
+![Installation diagram](docs/images/installation-rut906.svg)
+
+### RS485 bus
 
 | Parameter | Value |
 | --- | --- |
-| Interface | RS485 on `/dev/rs485` (mapped to `/dev/ttyS1`) |
-| Serial format | 9600 baud, 8 data bits, no parity, 1 stop bit |
-| Flow control | Off; the bus runs half duplex |
-| Topology | Two-wire bus, one master (the router), two slaves |
-| Signals | A (+), B (−) and a common ground reference |
+| Port | `/dev/rs485`, exposed as `/dev/ttyS1` |
+| Format | 9600 baud, 8 data bits, no parity, 1 stop bit |
+| Flow control | Off, half duplex |
+| Topology | One master (router), three Modbus servers |
+| Poll period | 20 s per server |
 
-### Sensor 1 — MPPT solar charge controller (IPANDEE)
+### Modbus servers
 
-| Field | Register | Scaling | Metric key |
-| --- | --- | --- | --- |
-| `pv_voltage` | 2 | ÷ 10 → V | `rut.mppt.pv.v` |
-| `charging_current` | 4 | ÷ 10 → A | `rut.mppt.pv.a` |
-| `output_voltage` | 5 | ÷ 10 → V | `rut.mppt.out.v` |
-| `load_current` | 7 | ÷ 10 → A | `rut.mppt.out.a` |
+| Sensor | Unit id | Function | Registers read | Published fields |
+| --- | --- | --- | --- | --- |
+| MPPT charge controller (IPANDEE) | 2 | 3 | 12 | 4 |
+| Three-phase energy meter (PZEM-6L24) | 1 | 4 | 8 | 7 |
+| Pyranometer (Honde RD-PSR-01) | 3 | 3 | 1 | 1 |
 
-Modbus RTU, unit id 2. These four values are the DC side of the installation: what
-the array produces, and what the controller passes to the load.
+### MPPT charge controller
 
-### Sensor 2 — three-phase energy meter (PZEM-6L24)
+| Field | Register | Function | Scale | Metric |
+| --- | --- | --- | --- | --- |
+| `pv_voltage` | 2 | 3 | divide by 10, V | `rut.mppt.pv.v` |
+| `charging_current` | 4 | 3 | divide by 10, A | `rut.mppt.pv.a` |
+| `output_voltage` | 5 | 3 | divide by 10, V | `rut.mppt.out.v` |
+| `load_current` | 7 | 3 | divide by 10, A | `rut.mppt.out.a` |
 
-| Field | Register | Scaling | Metric key |
-| --- | --- | --- | --- |
-| `a_voltage` | 1 | ÷ 10 → V | `rut.pzem.a.voltage` |
-| `b_voltage` | 2 | ÷ 10 → V | `rut.pzem.b.voltage` |
-| `c_voltage` | 3 | ÷ 10 → V | `rut.pzem.c.voltage` |
-| `a_current` | 4 | ÷ 100 → A | `rut.pzem.a.current` |
-| `b_current` | 5 | ÷ 100 → A | `rut.pzem.b.current` |
-| `c_current` | 6 | ÷ 100 → A | `rut.pzem.c.current` |
-| `kwh` | 59 (two registers) | scale to be validated | `rut.pzem.energy.kwh` |
+Eight further fields are polled for local diagnostics (charging power, battery
+voltage, level and temperature, load power and voltage, internal temperature, system
+voltage) and are not part of the contract.
 
-Modbus RTU, unit id 1, function code 04 (input registers). This is the AC side: the
-three phase voltages and load currents, plus the accumulated energy counter.
+### Three-phase energy meter
 
-The energy counter is deliberately not treated as billing grade. The register pair
-is stored as read, and the scale factor must be confirmed against a reference meter
-before any figure derived from it is trusted.
+| Field | Register | Function | Scale | Metric |
+| --- | --- | --- | --- | --- |
+| `a_voltage` | 1 | 4 | divide by 10, V | `rut.pzem.a.voltage` |
+| `b_voltage` | 2 | 4 | divide by 10, V | `rut.pzem.b.voltage` |
+| `c_voltage` | 3 | 4 | divide by 10, V | `rut.pzem.c.voltage` |
+| `a_current` | 4 | 4 | divide by 100, A | `rut.pzem.a.current` |
+| `b_current` | 5 | 4 | divide by 100, A | `rut.pzem.b.current` |
+| `c_current` | 6 | 4 | divide by 100, A | `rut.pzem.c.current` |
+| `kwh` | 59 | 4 | 32 bit pair, published as read | `rut.pzem.energy.kwh` |
 
-### Sensor 3 — solar irradiance: NOT INTEGRATED
+The energy counter is stored as read, without a derived scale factor. Any figure
+built from it must be confirmed against a reference meter first.
 
-The irradiance reading is part of the design, but it is **not** wired into the
-telemetry map, because two references describe it differently:
+### Pyranometer
 
-- one drawing shows a Modbus RS485 device with a possible slave id 3;
-- another document describes an analog output (4–20 mA or 0–10 V).
+| Field | Register | Function | Scale | Metric |
+| --- | --- | --- | --- | --- |
+| `solar_radiation` | 1 | 3 | 1:1, W/m2 | `rut.solar.radiation` |
 
-Model, interface, address and scaling therefore remain unverified. Until they are
-confirmed on the bench, the metric stays out of the contract and the UI renders the
-field as `NO DATA` with the state `NOT INTEGRATED`. Guessing a protocol, a register
-or a scale factor here would produce a number that looks plausible and means
-nothing, which is worse than an explicit gap.
+![Pyranometer reading on the dashboard](docs/images/solar-card.png)
 
-### On the router
+Honde RD-PSR-01 on the same bus as unit 3, holding register 1, one 16 bit register,
+high byte first. The formatter publishes it unscaled, so the portal, the history and
+the reports read the same number the sensor measures. Alarms on irradiance are left
+to the operator: sensible limits depend on the site.
+
+### Router publishing
 
 | Step | Detail |
 | --- | --- |
-| 1 · Modbus client | Polls both units; the cached values land in the device's Modbus database |
-| 2 · Data Sender input | One combined input with eleven requests: the four MPPT fields and the seven PZEM fields |
-| 3 · Lua formatter | Emits the payload identity (site id, serial, epoch seconds) with numeric sanity per field |
-| 4 · Data Sender output | Publishes every 20 s over MQTT TLS (port 8883) or HTTPS to the ingest endpoint |
+| Combined input | One input collects twelve requests from the three servers |
+| Published fields | `pv_voltage`, `charging_current`, `output_voltage`, `load_current`, `a_voltage`, `b_voltage`, `c_voltage`, `a_current`, `b_current`, `c_current`, `kwh`, `solar_radiation` |
+| Formatter | Lua per collection, applying the scale factors in the tables above |
+| MQTT output | TLS, port 8883, QoS 0, keepalive 60 s, site topic |
+| HTTP output | Lua formatter posting the same payload to the ingest endpoint |
+| Period | 20 s |
 
-Verified on the bench: bus parameters, unit ids, both register maps and the
-transport. Not verified: the kWh scale factor, the irradiance sensor, and the
-broker-side credentials of the production MQTT leg.
+### Verified state
 
-## Sensors and scaling
+| Item | Status |
+| --- | --- |
+| Bus parameters, unit ids, register maps, scale factors | Verified against the running router and formatter |
+| Pyranometer integration | Integrated and reporting, value read from Zabbix and shown in the portal |
+| MQTT leg | Configured on the device, currently disabled there, so telemetry arrives over the HTTPS ingest path |
+| Energy scale factor | Published as read, reference-meter validation still open |
 
-Sensor integration is treated as data, not as code. Each sensor contributes a unit
-id, a function code, register offsets and a scaling factor. A sensor whose model,
-interface or scaling has not been verified on the bench is marked
-`NOT INTEGRATED` and its readings stay `NO DATA` — the platform does not guess a
-protocol, an address or a billing-grade scale factor.
-
-## Getting started
-
-Requirements: Node.js 22 or newer for the frontend build, Python 3.11 or newer for
-the backend, and a reachable Zabbix instance for real mode.
+## Development
 
 ```bash
 npm install
-npm run dev            # frontend on http://localhost:5173, Vite dev server
-python3 -m backend.app # backend API on http://127.0.0.1:8080
+npm run dev              # Vite dev server on http://localhost:5173
+python3 -m backend.app   # backend API on http://127.0.0.1:8080
 ```
 
-The frontend reads `VITE_*` values only; see `.env.example`. Backend configuration
-is environment based; see `backend/.env.example` for the variable names (values are
-never committed). With `VITE_DATA_MODE=mock` the UI renders deterministic fixture
-data and needs no backend; with `real` it talks to the API and never fabricates.
+The frontend reads `VITE_*` values only, see `.env.example`. Backend configuration is
+environment based, see `backend/.env.example` for the variable names. With
+`VITE_DATA_MODE=mock` the UI renders deterministic fixtures and needs no backend,
+with `real` it talks to the API and never fabricates a value.
 
 ## Testing
 
@@ -263,37 +212,35 @@ data and needs no backend; with `real` it talks to the API and never fabricates.
 npm test               # frontend unit tests
 npm run test:backend   # backend suite
 npx tsc --noEmit       # type check
-npm run lint           # lint
+npm run lint
 ```
 
 ## Deployment
 
 ```bash
-npm run build          # emits dist/ for Apache
+npm run build          # emits dist/ for the web server
 ```
 
-The repository ships the pieces the deployment needs: an Apache virtual host that
-serves `dist/` and proxies `/api` to the loopback backend, a systemd unit for the
-backend service, and Grafana provisioning for the Zabbix data source and the
-overview dashboard. Typical layout: application under `/opt/telnusa-nms`, state
-under `/var/lib/telnusa-nms`, service environment under `/etc/telnusa-nms`.
+| Item | Path |
+| --- | --- |
+| Application | `/opt/telnusa-nms` |
+| State | `/var/lib/telnusa-nms/nms.db` |
+| Service environment | `/etc/telnusa-nms/nms.env`, owner only |
+| Backend bind | `127.0.0.1:8080`, reached through the reverse proxy |
 
-Operational principles: the backend binds loopback only; the reverse proxy is the
-single ingress; the trusted-proxy hop count is configured explicitly so client
-addresses for rate limits and audit come from the real peer; secrets live in the
-service environment file with owner-only permissions.
+The repository ships the virtual host, the systemd unit and the Grafana
+provisioning. The proxy is the only ingress, the trusted proxy hop count is set
+explicitly so rate limits and audit see the real client, and every secret stays in
+the service environment file.
 
-## Reuse as a starting point
+## Reuse
 
-To adapt this codebase to another dashboard, replace the telemetry contract in
-`backend/telemetry.py` and the Zabbix key set in `backend/zabbix_contract.py`, then
-update the sensor map, the page labels in `src/i18n` and the fixture data in
-`src/mock`. The ingestion pipeline, delivery queue, rollup, chart components,
-report export, remote access and deployment layout stay as they are.
+To point this codebase at another site, replace the contract in
+`backend/telemetry.py` and the key set in `backend/zabbix_contract.py`, then update
+the sensor map, the labels in `src/i18n` and the fixtures in `src/mock`. Ingest,
+queue, rollup, charts, exports, remote access and deployment stay unchanged.
 
 ## Status
 
-Field deployment for a small number of sites. The sensor map reflects the
-commissioned hardware of those sites; the software itself is transport, storage and
-presentation only. MQTT requires broker credentials configured on both sides;
-where a broker credential is not available, the HTTP ingest path carries telemetry.
+Field deployment for a small number of sites. The sensor map above describes the
+commissioned hardware of the reference site.

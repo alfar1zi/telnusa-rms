@@ -190,7 +190,7 @@ export default function Login() {
                   autoComplete="current-password"
                   required
                   disabled={submitting}
-                  placeholder="••••••••"
+                  placeholder="--------"
                   className="pr-10"
                 />
                 <TextureButton

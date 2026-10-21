@@ -5,7 +5,7 @@
  * Identity comes exclusively from GET /api/auth/me (HttpOnly cookie session).
  *
  * In mock mode: returns a synthetic admin user immediately.
- * In real mode: fetches /api/auth/me; 401 → user is null → ProtectedRoute redirects.
+ * In real mode: fetches /api/auth/me; 401 means the user is null, and ProtectedRoute redirects.
  *
  * NEVER store the user object in localStorage or sessionStorage.
  */
