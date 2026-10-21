@@ -1,0 +1,167 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 648" width="1400" height="648" role="img" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif">
+  <title>System architecture and workflow, one deployment</title>
+  <desc>Architecture diagram. The field site publishes telemetry over MQTT TLS or HTTPS. The TELNUSA NMS validates, registers, queues and stores it, writes trapper values to Zabbix and reads history and problems back, and serves the operator browser. A second row shows the remote access path: authenticated session, server-side trusted target, then native WebUI or SSH console over a private overlay.</desc>
+  <defs>
+    <marker id="flow" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 8 4 L 0 8 Z" fill="#8b949e"/>
+    </marker>
+  </defs>
+
+  <rect width="1400" height="648" fill="#0d1117"/>
+
+  <text x="32" y="56" font-size="20" font-weight="600" fill="#e6edf3">System architecture and workflow, one deployment</text>
+  <text x="32" y="80" font-size="14" fill="#8b949e">Telemetry path on the first row, remote access path on the second. Every line is a single direction with its intent on the label.</text>
+
+  <g font-size="12" fill="#8b949e">
+    <rect x="836" y="38" width="16" height="16" rx="2" fill="#161b22" stroke="#30363d"/>
+    <text x="860" y="51">Field</text>
+    <rect x="924" y="38" width="16" height="16" rx="2" fill="rgba(56,139,253,0.15)" stroke="#1f6feb"/>
+    <text x="948" y="51">Application</text>
+    <rect x="1044" y="38" width="16" height="16" rx="2" fill="rgba(46,160,67,0.15)" stroke="#2ea043"/>
+    <text x="1068" y="51">Monitoring core</text>
+    <rect x="1200" y="38" width="16" height="16" rx="2" fill="rgba(163,113,247,0.15)" stroke="#a371f7"/>
+    <text x="1224" y="51">Operator and access</text>
+  </g>
+  <line x1="32" y1="96" x2="1368" y2="96" stroke="#30363d"/>
+
+  <text x="40" y="128" font-size="12" font-weight="600" fill="#8b949e" letter-spacing="0.32">TELEMETRY PATH</text>
+  <text x="40" y="472" font-size="12" font-weight="600" fill="#8b949e" letter-spacing="0.32">REMOTE ACCESS PATH</text>
+
+  <!-- row A: telemetry path -->
+  <rect x="40" y="176" width="232" height="176" rx="8" fill="#161b22" stroke="#30363d"/>
+  <text x="56" y="204" font-size="16" font-weight="600" fill="#e6edf3">Field site</text>
+  <text x="56" y="224" font-size="12" fill="#8b949e">RUT906 with three sensors</text>
+  <line x1="56" y1="236" x2="256" y2="236" stroke="#21262d"/>
+  <g font-size="12">
+    <text x="56" y="260" fill="#e6edf3">sensors</text>
+    <text x="256" y="260" fill="#79c0ff" text-anchor="end">three units</text>
+    <text x="56" y="284" fill="#e6edf3">bus</text>
+    <text x="256" y="284" fill="#79c0ff" text-anchor="end">9600 8N1</text>
+    <text x="56" y="308" fill="#e6edf3">poll</text>
+    <text x="256" y="308" fill="#79c0ff" text-anchor="end">20 s</text>
+    <text x="56" y="332" fill="#e6edf3">publishes</text>
+    <text x="256" y="332" fill="#79c0ff" text-anchor="end">12 fields</text>
+  </g>
+
+  <rect x="312" y="176" width="232" height="176" rx="8" fill="rgba(56,139,253,0.15)" stroke="#1f6feb"/>
+  <text x="328" y="204" font-size="16" font-weight="600" fill="#a5d6ff">Transports</text>
+  <text x="328" y="224" font-size="12" fill="#79c0ff">two paths, one contract</text>
+  <line x1="328" y1="236" x2="528" y2="236" stroke="#1f6feb"/>
+  <g font-size="12">
+    <text x="328" y="260" fill="#a5d6ff">MQTT TLS</text>
+    <text x="528" y="260" fill="#79c0ff" text-anchor="end">8883, disabled</text>
+    <text x="328" y="284" fill="#a5d6ff">HTTPS</text>
+    <text x="528" y="284" fill="#79c0ff" text-anchor="end">443, active</text>
+    <text x="328" y="308" fill="#a5d6ff">retry</text>
+    <text x="528" y="308" fill="#79c0ff" text-anchor="end">10 attempts</text>
+    <text x="328" y="332" fill="#a5d6ff">identity</text>
+    <text x="528" y="332" fill="#79c0ff" text-anchor="end">site, serial, epoch</text>
+  </g>
+
+  <rect x="584" y="176" width="232" height="176" rx="8" fill="rgba(56,139,253,0.15)" stroke="#1f6feb"/>
+  <text x="600" y="204" font-size="16" font-weight="600" fill="#a5d6ff">TELNUSA NMS</text>
+  <text x="600" y="224" font-size="12" fill="#79c0ff">one Python service</text>
+  <line x1="600" y1="236" x2="800" y2="236" stroke="#1f6feb"/>
+  <g font-size="12">
+    <text x="600" y="260" fill="#a5d6ff">validation</text>
+    <text x="800" y="260" fill="#79c0ff" text-anchor="end">sanity, whitelist</text>
+    <text x="600" y="284" fill="#a5d6ff">registry</text>
+    <text x="800" y="284" fill="#79c0ff" text-anchor="end">on first payload</text>
+    <text x="600" y="308" fill="#a5d6ff">queue</text>
+    <text x="800" y="308" fill="#79c0ff" text-anchor="end">durable, bounded</text>
+    <text x="600" y="332" fill="#a5d6ff">latest state</text>
+    <text x="800" y="332" fill="#79c0ff" text-anchor="end">SQLite</text>
+  </g>
+
+  <rect x="856" y="176" width="232" height="176" rx="8" fill="rgba(46,160,67,0.15)" stroke="#2ea043"/>
+  <text x="872" y="204" font-size="16" font-weight="600" fill="#56d364">Monitoring core</text>
+  <text x="872" y="224" font-size="12" fill="#56d364">Zabbix and Grafana</text>
+  <line x1="872" y1="236" x2="1072" y2="236" stroke="#2ea043"/>
+  <g font-size="12">
+    <text x="872" y="260" fill="#3fb950">items</text>
+    <text x="1072" y="260" fill="#56d364" text-anchor="end">12 trapper</text>
+    <text x="872" y="284" fill="#3fb950">history</text>
+    <text x="1072" y="284" fill="#56d364" text-anchor="end">rollups, gaps</text>
+    <text x="872" y="308" fill="#3fb950">problems</text>
+    <text x="1072" y="308" fill="#56d364" text-anchor="end">alarm rules</text>
+    <text x="872" y="332" fill="#3fb950">dashboards</text>
+    <text x="1072" y="332" fill="#56d364" text-anchor="end">fleet overview</text>
+  </g>
+
+  <rect x="1128" y="176" width="232" height="176" rx="8" fill="rgba(163,113,247,0.15)" stroke="#a371f7"/>
+  <text x="1144" y="204" font-size="16" font-weight="600" fill="#d2a8ff">Operator</text>
+  <text x="1144" y="224" font-size="12" fill="#bc8cff">authenticated session</text>
+  <line x1="1144" y1="236" x2="1344" y2="236" stroke="#a371f7"/>
+  <g font-size="12">
+    <text x="1144" y="260" fill="#d2a8ff">dashboard</text>
+    <text x="1344" y="260" fill="#bc8cff" text-anchor="end">state, alarms</text>
+    <text x="1144" y="284" fill="#d2a8ff">monitoring</text>
+    <text x="1344" y="284" fill="#bc8cff" text-anchor="end">charts per metric</text>
+    <text x="1144" y="308" fill="#d2a8ff">reports</text>
+    <text x="1344" y="308" fill="#bc8cff" text-anchor="end">XLSX, print</text>
+    <text x="1144" y="332" fill="#d2a8ff">remote access</text>
+    <text x="1344" y="332" fill="#bc8cff" text-anchor="end">WebUI, console</text>
+  </g>
+
+  <line x1="274" y1="296" x2="306" y2="296" stroke="#8b949e" stroke-width="2" marker-end="url(#flow)"/>
+  <line x1="546" y1="296" x2="578" y2="296" stroke="#8b949e" stroke-width="2" marker-end="url(#flow)"/>
+  <line x1="818" y1="296" x2="850" y2="296" stroke="#8b949e" stroke-width="2" marker-end="url(#flow)"/>
+  <line x1="1090" y1="296" x2="1122" y2="296" stroke="#8b949e" stroke-width="2" marker-end="url(#flow)"/>
+  <g font-size="12" fill="#8b949e" text-anchor="middle">
+    <text x="290" y="168">publish</text>
+    <text x="562" y="168">deliver</text>
+    <text x="834" y="168">trapper values</text>
+    <text x="1106" y="168">history and problems</text>
+  </g>
+
+  <!-- row B: remote access path -->
+  <rect x="40" y="400" width="424" height="160" rx="8" fill="rgba(163,113,247,0.15)" stroke="#a371f7"/>
+  <text x="56" y="428" font-size="16" font-weight="600" fill="#d2a8ff">Authorised session</text>
+  <text x="56" y="448" font-size="12" fill="#bc8cff">portal authentication and roles</text>
+  <line x1="56" y1="460" x2="448" y2="460" stroke="#a371f7"/>
+  <g font-size="12">
+    <text x="56" y="486" fill="#d2a8ff">credentials</text>
+    <text x="448" y="486" fill="#bc8cff" text-anchor="end">hashed, never in the browser</text>
+    <text x="56" y="510" fill="#d2a8ff">session</text>
+    <text x="448" y="510" fill="#bc8cff" text-anchor="end">stored as a digest</text>
+    <text x="56" y="534" fill="#d2a8ff">audit</text>
+    <text x="448" y="534" fill="#bc8cff" text-anchor="end">actor, action, result</text>
+  </g>
+
+  <rect x="504" y="400" width="424" height="160" rx="8" fill="rgba(56,139,253,0.15)" stroke="#1f6feb"/>
+  <text x="520" y="428" font-size="16" font-weight="600" fill="#a5d6ff">Trusted target</text>
+  <text x="520" y="448" font-size="12" fill="#79c0ff">resolved on the server</text>
+  <line x1="520" y1="460" x2="912" y2="460" stroke="#1f6feb"/>
+  <g font-size="12">
+    <text x="520" y="486" fill="#a5d6ff">source</text>
+    <text x="912" y="486" fill="#79c0ff" text-anchor="end">device registry</text>
+    <text x="520" y="510" fill="#a5d6ff">browser input</text>
+    <text x="912" y="510" fill="#79c0ff" text-anchor="end">never a host or a URL</text>
+    <text x="520" y="534" fill="#a5d6ff">path</text>
+    <text x="912" y="534" fill="#79c0ff" text-anchor="end">private overlay</text>
+  </g>
+
+  <rect x="968" y="400" width="392" height="160" rx="8" fill="#161b22" stroke="#30363d"/>
+  <text x="984" y="428" font-size="16" font-weight="600" fill="#e6edf3">Device native access</text>
+  <text x="984" y="448" font-size="12" fill="#8b949e">nothing exposed to the internet</text>
+  <line x1="984" y1="460" x2="1344" y2="460" stroke="#21262d"/>
+  <g font-size="12">
+    <text x="984" y="486" fill="#e6edf3">WebUI</text>
+    <text x="1344" y="486" fill="#79c0ff" text-anchor="end">reverse proxied inside the portal</text>
+    <text x="984" y="510" fill="#e6edf3">console</text>
+    <text x="1344" y="510" fill="#79c0ff" text-anchor="end">signed grant, single use</text>
+    <text x="984" y="534" fill="#e6edf3">SSH</text>
+    <text x="1344" y="534" fill="#79c0ff" text-anchor="end">over the overlay, no public port</text>
+  </g>
+
+  <line x1="466" y1="480" x2="498" y2="480" stroke="#8b949e" stroke-width="2" marker-end="url(#flow)"/>
+  <line x1="930" y1="480" x2="962" y2="480" stroke="#8b949e" stroke-width="2" marker-end="url(#flow)"/>
+  <g font-size="12" fill="#8b949e" text-anchor="middle">
+    <text x="482" y="392">authorise</text>
+    <text x="946" y="392">connect</text>
+  </g>
+
+  <line x1="32" y1="588" x2="1368" y2="588" stroke="#30363d"/>
+  <text x="32" y="612" font-size="12" fill="#6e7681">The browser never reaches MQTT, Zabbix, the database or a device directly.</text>
+  <text x="1368" y="612" font-size="12" fill="#6e7681" text-anchor="end">Source: source code and host configuration read on 22 October 2026. Version 1.</text>
+</svg>
