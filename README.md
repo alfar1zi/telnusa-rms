@@ -52,7 +52,7 @@ unintegrated source is labelled instead of drawn as zero.
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/architecture-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="docs/images/architecture.svg">
-  <img alt="System architecture: telemetry path on the first row, remote access path on the second" src="docs/images/architecture.svg">
+  <img alt="System architecture: telemetry path on the first row, remote access path on the second" src="docs/images/architecture-dark.svg">
 </picture>
 
 Telemetry path on the first row, remote access path on the second. The browser
@@ -127,7 +127,7 @@ Zabbix host identity is `RUT-<serial>`, created once and reconciled, never dupli
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/installation-rut906-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="docs/images/installation-rut906.svg">
-  <img alt="Field installation and data flow: three Modbus sensors on one RS485 bus, the router, and the platform" src="docs/images/installation-rut906.svg">
+  <img alt="Field installation and data flow: three Modbus sensors on one RS485 bus, the router, and the platform" src="docs/images/installation-rut906-dark.svg">
 </picture>
 
 ### RS485 bus
@@ -247,7 +247,7 @@ npm run build          # emits dist/ for the web server
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/deployment-dark.svg">
   <source media="(prefers-color-scheme: light)" srcset="docs/images/deployment.svg">
-  <img alt="Deployment view: field site, private overlay, and one runtime host carrying ingress, application, monitoring and remote access" src="docs/images/deployment.svg">
+  <img alt="Deployment view: field site, private overlay, and one runtime host carrying ingress, application, monitoring and remote access" src="docs/images/deployment-dark.svg">
 </picture>
 
 The repository ships the virtual host, the systemd unit and the Grafana

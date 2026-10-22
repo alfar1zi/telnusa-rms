@@ -1,135 +1,129 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 848 956" width="848" height="956" role="img" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 848 928" width="848" height="928" role="img" font-family="Inter, Segoe UI, Helvetica, Arial, sans-serif">
   <title>Deployment view, one runtime host</title>
-  <desc>Deployment diagram. Field devices reach the platform through a private overlay. One Ubuntu host carries ingress, the TELNUSA NMS service with its SQLite state, the monitoring core with Zabbix, MySQL and Grafana, and the Guacamole console gateway.</desc>
+  <desc>Field devices behind a private overlay, and one Ubuntu host carrying ingress, the TELNUSA NMS service with SQLite state, the monitoring core with Zabbix, MySQL and Grafana, and the Guacamole console gateway.</desc>
   <defs>
     <marker id="flow" viewBox="0 0 8 8" refX="7.5" refY="4" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
       <path d="M 0 0 L 8 4 L 0 8 Z" fill="#8b949e"/>
     </marker>
   </defs>
 
-  <rect width="848" height="956" fill="#0d1117"/>
+  <rect width="848" height="928" fill="#161b22"/>
   <text x="24" y="44" font-size="18" font-weight="600" fill="#e6edf3">Deployment view, one runtime host</text>
-  <text x="24" y="66" font-size="12.5" fill="#8b949e">What runs where: field devices behind a private overlay, one host carrying ingress, application, monitoring and remote access.</text>
+  <text x="24" y="66" font-size="12.5" fill="#8b949e">Field devices sit behind a private overlay. One host carries ingress, application, monitoring and remote access.</text>
 
   <g font-size="11.5" fill="#8b949e">
-    <rect x="24" y="84" width="14" height="14" rx="2" fill="#161b22" stroke="#30363d"/>
-    <text x="44" y="95">Device and field</text>
-    <rect x="196" y="84" width="14" height="14" rx="2" fill="rgba(163,113,247,0.15)" stroke="#a371f7"/>
-    <text x="216" y="95">Private overlay</text>
-    <rect x="368" y="84" width="14" height="14" rx="2" fill="rgba(56,139,253,0.15)" stroke="#1f6feb"/>
-    <text x="388" y="95">Host service</text>
-    <rect x="532" y="84" width="14" height="14" rx="2" fill="rgba(46,160,67,0.15)" stroke="#2ea043"/>
-    <text x="552" y="95">Data and container</text>
+    <rect x="24" y="84" width="14" height="14" rx="2" fill="none" stroke="#30363d"/>
+    <text x="44" y="95">Element</text>
+    <rect x="128" y="84" width="14" height="14" rx="2" fill="none" stroke="#1f6feb" stroke-width="1.5"/>
+    <text x="148" y="95">Application</text>
+    <circle cx="257" cy="91" r="7" fill="#1f6feb"/>
+    <text x="270" y="95">Flow step</text>
   </g>
   <line x1="24" y1="110" x2="824" y2="110" stroke="#30363d"/>
 
-  <!-- left: field and overlay -->
-  <rect x="24" y="128" width="368" height="190" rx="8" fill="#161b22" stroke="#30363d"/>
-  <text x="40" y="154" font-size="15" font-weight="600" fill="#e6edf3">Teltonika RUT906</text>
-  <text x="40" y="172" font-size="12" fill="#8b949e">site site-a, serial and epoch in the payload</text>
-  <line x1="40" y1="184" x2="376" y2="184" stroke="#21262d"/>
+  <text x="24" y="134" font-size="11" font-weight="600" fill="#8b949e" letter-spacing="0.32">FIELD AND OVERLAY</text>
+  <text x="448" y="134" font-size="11" font-weight="600" fill="#8b949e" letter-spacing="0.32">RUNTIME HOST</text>
+
+  <rect x="24" y="148" width="368" height="172" rx="8" fill="none" stroke="#30363d"/>
+  <text x="40" y="174" font-size="15" font-weight="600" fill="#e6edf3">Teltonika RUT906</text>
+  <text x="40" y="192" font-size="12" fill="#8b949e">site site-a, serial and epoch in every payload</text>
+  <line x1="40" y1="204" x2="376" y2="204" stroke="#21262d"/>
   <g font-size="13">
-    <text x="40" y="208" fill="#c9d1d9">MPPT charge controller</text>
-    <text x="376" y="208" fill="#8b949e" text-anchor="end">unit 2</text>
-    <text x="40" y="230" fill="#c9d1d9">three-phase energy meter</text>
-    <text x="376" y="230" fill="#8b949e" text-anchor="end">unit 1</text>
-    <text x="40" y="252" fill="#c9d1d9">pyranometer</text>
-    <text x="376" y="252" fill="#8b949e" text-anchor="end">unit 3</text>
-    <text x="40" y="274" fill="#c9d1d9">bus and poll period</text>
-    <text x="376" y="274" fill="#8b949e" text-anchor="end">9600 8N1, 20 s</text>
-    <text x="40" y="296" fill="#c9d1d9">publishes every 20 s</text>
-    <text x="376" y="296" fill="#8b949e" text-anchor="end">12 fields</text>
+    <text x="40" y="228" fill="#e6edf3">MPPT charge controller</text>
+    <text x="376" y="228" fill="#8b949e" text-anchor="end">unit 2</text>
+    <text x="40" y="252" fill="#e6edf3">three-phase energy meter</text>
+    <text x="376" y="252" fill="#8b949e" text-anchor="end">unit 1</text>
+    <text x="40" y="276" fill="#e6edf3">pyranometer</text>
+    <text x="376" y="276" fill="#8b949e" text-anchor="end">unit 3</text>
+    <text x="40" y="300" fill="#e6edf3">bus, poll, publish</text>
+    <text x="376" y="300" fill="#8b949e" text-anchor="end">9600 8N1, 20 s, 12 fields</text>
   </g>
 
-  <rect x="24" y="334" width="368" height="152" rx="8" fill="rgba(163,113,247,0.15)" stroke="#a371f7"/>
-  <text x="40" y="360" font-size="15" font-weight="600" fill="#d2a8ff">ZeroTier overlay</text>
-  <text x="40" y="378" font-size="12" fill="#bc8cff">private network, no public port</text>
-  <line x1="40" y1="390" x2="376" y2="390" stroke="#a371f7"/>
+  <rect x="24" y="336" width="368" height="148" rx="8" fill="none" stroke="#30363d"/>
+  <text x="40" y="362" font-size="15" font-weight="600" fill="#e6edf3">ZeroTier overlay</text>
+  <text x="40" y="380" font-size="12" fill="#8b949e">private network, no public port</text>
+  <line x1="40" y1="392" x2="376" y2="392" stroke="#21262d"/>
   <g font-size="13">
-    <text x="40" y="414" fill="#d2a8ff">members</text>
-    <text x="376" y="414" fill="#bc8cff" text-anchor="end">host and router</text>
-    <text x="40" y="436" fill="#d2a8ff">carries</text>
-    <text x="376" y="436" fill="#bc8cff" text-anchor="end">telemetry, WebUI, SSH</text>
-    <text x="40" y="458" fill="#d2a8ff">address range</text>
-    <text x="376" y="458" fill="#bc8cff" text-anchor="end">private</text>
+    <text x="40" y="416" fill="#e6edf3">members</text>
+    <text x="376" y="416" fill="#8b949e" text-anchor="end">host and router</text>
+    <text x="40" y="440" fill="#e6edf3">carries</text>
+    <text x="376" y="440" fill="#8b949e" text-anchor="end">telemetry, WebUI, SSH</text>
+    <text x="40" y="464" fill="#e6edf3">addressing</text>
+    <text x="376" y="464" fill="#8b949e" text-anchor="end">private range</text>
   </g>
 
-  <rect x="24" y="502" width="368" height="92" rx="8" fill="rgba(163,113,247,0.15)" stroke="#a371f7"/>
-  <text x="40" y="528" font-size="15" font-weight="600" fill="#d2a8ff">Targets resolved on the server</text>
-  <line x1="40" y1="540" x2="376" y2="540" stroke="#a371f7"/>
-  <text x="40" y="564" font-size="13" fill="#d2a8ff">from the device registry, never from the browser</text>
+  <rect x="24" y="500" width="368" height="92" rx="8" fill="none" stroke="#30363d"/>
+  <text x="40" y="526" font-size="15" font-weight="600" fill="#e6edf3">Targets resolved on the server</text>
+  <line x1="40" y1="538" x2="376" y2="538" stroke="#21262d"/>
+  <text x="40" y="562" font-size="13" fill="#8b949e">from the device registry, never from the browser</text>
 
-  <!-- right: the host -->
-  <rect x="448" y="128" width="376" height="120" rx="8" fill="rgba(56,139,253,0.15)" stroke="#1f6feb"/>
-  <text x="464" y="154" font-size="15" font-weight="600" fill="#a5d6ff">Ingress, Apache 2.4</text>
-  <text x="464" y="172" font-size="12" fill="#79c0ff">the only way into the host</text>
-  <line x1="464" y1="184" x2="808" y2="184" stroke="#1f6feb"/>
+  <rect x="448" y="148" width="376" height="104" rx="8" fill="none" stroke="#1f6feb" stroke-width="1.5"/>
+  <text x="464" y="174" font-size="15" font-weight="600" fill="#e6edf3">Ingress, Apache 2.4</text>
+  <text x="464" y="192" font-size="12" fill="#8b949e">the only way into the host</text>
+  <line x1="464" y1="204" x2="808" y2="204" stroke="#21262d"/>
   <g font-size="13">
-    <text x="464" y="208" fill="#a5d6ff">serves</text>
-    <text x="808" y="208" fill="#79c0ff" text-anchor="end">static build, TLS</text>
-    <text x="464" y="230" fill="#a5d6ff">proxies</text>
-    <text x="808" y="230" fill="#79c0ff" text-anchor="end">/api and /guacamole</text>
+    <text x="464" y="228" fill="#e6edf3">serves</text>
+    <text x="808" y="228" fill="#8b949e" text-anchor="end">static build, TLS</text>
+    <text x="464" y="250" fill="#e6edf3">proxies</text>
+    <text x="808" y="250" fill="#8b949e" text-anchor="end">/api and /guacamole</text>
   </g>
 
-  <rect x="448" y="264" width="376" height="160" rx="8" fill="rgba(56,139,253,0.15)" stroke="#1f6feb"/>
-  <text x="464" y="290" font-size="15" font-weight="600" fill="#a5d6ff">TELNUSA NMS</text>
-  <text x="464" y="308" font-size="12" fill="#79c0ff">systemd service, Python, loopback bind</text>
-  <line x1="464" y1="320" x2="808" y2="320" stroke="#1f6feb"/>
+  <rect x="448" y="268" width="376" height="152" rx="8" fill="none" stroke="#1f6feb" stroke-width="1.5"/>
+  <text x="464" y="294" font-size="15" font-weight="600" fill="#e6edf3">TELNUSA NMS</text>
+  <text x="464" y="312" font-size="12" fill="#8b949e">systemd service, Python, loopback bind</text>
+  <line x1="464" y1="324" x2="808" y2="324" stroke="#21262d"/>
   <g font-size="13">
-    <text x="464" y="344" fill="#a5d6ff">ingest</text>
-    <text x="808" y="344" fill="#79c0ff" text-anchor="end">HTTPS and MQTT</text>
-    <text x="464" y="366" fill="#a5d6ff">workers</text>
-    <text x="808" y="366" fill="#79c0ff" text-anchor="end">delivery, retention</text>
-    <text x="464" y="388" fill="#a5d6ff">serves</text>
-    <text x="808" y="388" fill="#79c0ff" text-anchor="end">JSON API and SSE</text>
-    <text x="464" y="410" fill="#a5d6ff">secrets</text>
-    <text x="808" y="410" fill="#79c0ff" text-anchor="end">service environment</text>
+    <text x="464" y="348" fill="#e6edf3">ingest</text>
+    <text x="808" y="348" fill="#8b949e" text-anchor="end">HTTPS and MQTT</text>
+    <text x="464" y="372" fill="#e6edf3">workers</text>
+    <text x="808" y="372" fill="#8b949e" text-anchor="end">delivery, retention</text>
+    <text x="464" y="396" fill="#e6edf3">secrets</text>
+    <text x="808" y="396" fill="#8b949e" text-anchor="end">service environment</text>
   </g>
 
-  <rect x="448" y="440" width="376" height="112" rx="8" fill="rgba(46,160,67,0.15)" stroke="#2ea043"/>
-  <text x="464" y="466" font-size="15" font-weight="600" fill="#56d364">State, SQLite</text>
-  <text x="464" y="484" font-size="12" fill="#3fb950">one file, owned by the service user</text>
-  <line x1="464" y1="496" x2="808" y2="496" stroke="#2ea043"/>
+  <rect x="448" y="436" width="376" height="104" rx="8" fill="none" stroke="#30363d"/>
+  <text x="464" y="462" font-size="15" font-weight="600" fill="#e6edf3">State, SQLite</text>
+  <text x="464" y="480" font-size="12" fill="#8b949e">one file, owned by the service user</text>
+  <line x1="464" y1="492" x2="808" y2="492" stroke="#21262d"/>
   <g font-size="13">
-    <text x="464" y="520" fill="#3fb950">devices, queue, audit</text>
-    <text x="808" y="520" fill="#3fb950" text-anchor="end">retention bounded</text>
-    <text x="464" y="542" fill="#3fb950">sessions</text>
-    <text x="808" y="542" fill="#3fb950" text-anchor="end">stored as digest</text>
+    <text x="464" y="516" fill="#e6edf3">devices, queue, audit</text>
+    <text x="808" y="516" fill="#8b949e" text-anchor="end">retention bounded</text>
   </g>
 
-  <rect x="448" y="568" width="376" height="160" rx="8" fill="rgba(46,160,67,0.15)" stroke="#2ea043"/>
-  <text x="464" y="594" font-size="15" font-weight="600" fill="#56d364">Monitoring core</text>
-  <text x="464" y="612" font-size="12" fill="#3fb950">Zabbix 7.4, MySQL 8.4, Grafana 13</text>
-  <line x1="464" y1="624" x2="808" y2="624" stroke="#2ea043"/>
+  <rect x="448" y="556" width="376" height="176" rx="8" fill="none" stroke="#30363d"/>
+  <text x="464" y="582" font-size="15" font-weight="600" fill="#e6edf3">Monitoring core</text>
+  <text x="464" y="600" font-size="12" fill="#8b949e">Zabbix 7.4, MySQL 8.4, Grafana 13</text>
+  <line x1="464" y1="612" x2="808" y2="612" stroke="#21262d"/>
   <g font-size="13">
-    <text x="464" y="648" fill="#3fb950">hosts and items</text>
-    <text x="808" y="648" fill="#3fb950" text-anchor="end">one host per serial, 12 items</text>
-    <text x="464" y="670" fill="#3fb950">history and problems</text>
-    <text x="808" y="670" fill="#3fb950" text-anchor="end">rollups, alarms</text>
-    <text x="464" y="692" fill="#3fb950">dashboards</text>
-    <text x="808" y="692" fill="#3fb950" text-anchor="end">provisioned from the repo</text>
-    <text x="464" y="714" fill="#3fb950">outage</text>
-    <text x="808" y="714" fill="#3fb950" text-anchor="end">queue absorbs it</text>
+    <text x="464" y="636" fill="#e6edf3">hosts and items</text>
+    <text x="808" y="636" fill="#8b949e" text-anchor="end">one host per serial, 12 items</text>
+    <text x="464" y="660" fill="#e6edf3">history and problems</text>
+    <text x="808" y="660" fill="#8b949e" text-anchor="end">rollups, alarms</text>
+    <text x="464" y="684" fill="#e6edf3">dashboards</text>
+    <text x="808" y="684" fill="#8b949e" text-anchor="end">provisioned from the repo</text>
+    <text x="464" y="708" fill="#e6edf3">outage</text>
+    <text x="808" y="708" fill="#8b949e" text-anchor="end">queue absorbs it</text>
   </g>
 
-  <rect x="448" y="744" width="376" height="120" rx="8" fill="rgba(46,160,67,0.15)" stroke="#2ea043"/>
-  <text x="464" y="770" font-size="15" font-weight="600" fill="#56d364">Console and operations</text>
-  <text x="464" y="788" font-size="12" fill="#3fb950">Guacamole and guacd, unit file, backups</text>
-  <line x1="464" y1="800" x2="808" y2="800" stroke="#2ea043"/>
+  <rect x="448" y="748" width="376" height="120" rx="8" fill="none" stroke="#30363d"/>
+  <text x="464" y="774" font-size="15" font-weight="600" fill="#e6edf3">Console and operations</text>
+  <text x="464" y="792" font-size="12" fill="#8b949e">Guacamole and guacd, unit file, backups</text>
+  <line x1="464" y1="804" x2="808" y2="804" stroke="#21262d"/>
   <g font-size="13">
-    <text x="464" y="824" fill="#3fb950">console grant</text>
-    <text x="808" y="824" fill="#3fb950" text-anchor="end">signed, single use</text>
-    <text x="464" y="846" fill="#3fb950">secrets</text>
-    <text x="808" y="846" fill="#3fb950" text-anchor="end">outside the repository</text>
+    <text x="464" y="828" fill="#e6edf3">console grant</text>
+    <text x="808" y="828" fill="#8b949e" text-anchor="end">signed, single use</text>
+    <text x="464" y="852" fill="#e6edf3">secrets</text>
+    <text x="808" y="852" fill="#8b949e" text-anchor="end">outside the repository</text>
   </g>
 
-  <!-- links between the columns -->
-  <line x1="392" y1="223" x2="440" y2="223" stroke="#8b949e" stroke-width="2" marker-end="url(#flow)"/>
-  <text x="416" y="215" font-size="12" fill="#8b949e" text-anchor="middle">publish</text>
+  <line x1="392" y1="234" x2="440" y2="234" stroke="#8b949e" stroke-width="2" marker-end="url(#flow)"/>
   <line x1="392" y1="410" x2="440" y2="410" stroke="#8b949e" stroke-width="2" marker-end="url(#flow)"/>
-  <text x="416" y="402" font-size="12" fill="#8b949e" text-anchor="middle">overlay</text>
+  <g font-size="11.5" fill="#8b949e" text-anchor="middle">
+    <text x="416" y="226">publish</text>
+    <text x="416" y="402">overlay</text>
+  </g>
 
-  <line x1="24" y1="880" x2="824" y2="880" stroke="#30363d"/>
-  <text x="24" y="900" font-size="11.5" fill="#6e7681">One machine carries ingress, application, monitoring and remote access.</text>
-  <text x="24" y="916" font-size="11.5" fill="#6e7681">Source: host and service configuration read on 22 October 2026. Version 2.</text>
+  <line x1="24" y1="884" x2="824" y2="884" stroke="#30363d"/>
+  <text x="24" y="904" font-size="11.5" fill="#8b949e">One machine carries ingress, application, monitoring and remote access.</text>
+  <text x="24" y="920" font-size="11.5" fill="#8b949e">Source: host and service configuration read on 22 October 2026. Version 3</text>
 </svg>
